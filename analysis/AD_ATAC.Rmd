@@ -1,0 +1,83 @@
+---
+title: "AD_ATAC"
+author: "Lifan Liang"
+date: "2026-06-12"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+The results of differential peak analysis were created by Siwei and uploaded to Dropbox. We downloaded the result to perform enrichment analysis using both S-LDSC and TORUS.
+
+Initially, we applied the Benjamini-Hochberg method for multiple testing control. We obtained 1636 differential peaks with FDR < 0.05, all of which were upregulated peaks with log2 Fold change>2. Shown below is the volcano plot for the differential peak analysis, where red dots were FDR significant peaks.
+
+![](assets/volcano_plot.png)
+
+## TORUS enrichment results
+
+Since 1636 peaks roughly covered <0.1% of the genome, this is too sparse for S-LDSC (LDSC recommended 1%-10% SNP coverage for annotation sets). We used TORUS to estimate the enrichment marginally for Alzheimer's disease (AD) from two studies (i.e. Bellengue, et al. 2022 and Kunkle, et al, 2019). We also tried to extend the peaks by 500 base pairs downstream and upstream. Results of enrichment analysis remain insignificant.
+
+![](assets/TORUS_1636_peaks.png)
+
+## Recalibration of P value distribution
+
+The P value distribution is heavily leaning towards the high end (figure below), suggesting that the null model is not a good fit to the data and the statistical testing may be too conservative. 
+
+![](assets/initial_Pval_dist.png)
+
+We used the package fdrtool to estimate the empirical null from the z-score and calibrate the P values. 
+
+![](assets/fdrtool_Pval_dist.png)
+
+Then we used qval<0.05 to obtain 11747 DA peaks with absolute log2 fold change > 0.5. Figure below is the new volcano plot. 
+
+![](assets/volcano_qval5.png)
+
+After removing 460 down-regulated peaks, we used the 11287 peaks with window size extension (0, 1 kb, 2 kb, 5 kb down and upstream) to improve SNP covarage for S-LDSC. The fold enrichment results showed that the upregulated peaks were depleted of GWAS signals. The depletion was statistically significant in Kunkle.
+
+```{r,echo=F, message=F}
+library(dplyr)
+library(DT)
+
+bell.res <- list.files("/Users/lifanliang/Documents/AD_ATAC/workflow/results/Bellenguez_AD_ebi-a-GCST90027158/", pattern="results", full.names = T)
+dat <- do.call(rbind,lapply(bell.res, function(x) {read.table(x,header=T)[1,5:7]}))
+dat$GWAS <- "Bellengue_2022"
+dat$padding <- c(0,1000,2000,5000)
+
+kunkle.res <- list.files("/Users/lifanliang/Documents/AD_ATAC/workflow/results/Kunkle_AD_ieu-b-2/", pattern="results", full.names = T)
+dat1 <- do.call(rbind,lapply(kunkle.res, function(x) {read.table(x,header=T)[1,5:7]}))
+dat1$GWAS <- "Kunkle_2019"
+dat1$padding <- c(0,1000,2000,5000)
+
+dat2 <- rbind(dat,dat1)[,c(4:5,1:3)]
+DT::datatable(dat2, caption="Baseline 2.2") %>%
+  formatRound(columns = c("Enrichment", "Enrichment_std_error", "Enrichment_p"), digits = 3)
+```
+
+
+We also tried adding all the candidate peaks (around half a millon peaks) as another baseline annotations to control for. Fold enrichment still remains less than 1.
+
+```{r,echo=F}
+candidate.res <- list.files("/Users/lifanliang/Documents/AD_ATAC/workflow/results/sldsc/", pattern="results", full.names = T)
+dat.cant <- do.call(rbind,lapply(candidate.res, function(x) {read.table(x,header=T)[1,5:7]}))
+dat.cant$GWAS <- "Bellengue_2022"
+dat.cant$padding <- c(0,1000,2000,5000)
+dat.cant$GWAS <- rep(c("Bellengue_2022", "Kunkle_2019"), each=4)
+dat.cant$padding <- rep(c(0,1000,2000,5000),2)
+
+DT::datatable(dat.cant, caption="Baseline 2.2 + candidate peaks") %>%
+  formatRound(columns = c("Enrichment", "Enrichment_std_error", "Enrichment_p"), digits = 3)
+```
+
+We switched to TORUS to estimate the enrichment. The results still show negative enrichment
+
+![](assets/TORUS_11287_peaks.png)
+
+
+
+
+
+
+
