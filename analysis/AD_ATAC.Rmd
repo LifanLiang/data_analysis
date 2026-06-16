@@ -7,7 +7,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Introduction
+## Initial 1636 upregulated peaks with FDR<5%
 
 The results of differential peak analysis were created by Siwei and uploaded to Dropbox. We downloaded the result to perform enrichment analysis using both S-LDSC and TORUS.
 
@@ -15,13 +15,13 @@ Initially, we applied the Benjamini-Hochberg method for multiple testing control
 
 ![](assets/volcano_plot.png)
 
-## TORUS enrichment results
+### TORUS enrichment results
 
 Since 1636 peaks roughly covered <0.1% of the genome, this is too sparse for S-LDSC (LDSC recommended 1%-10% SNP coverage for annotation sets). We used TORUS to estimate the enrichment marginally for Alzheimer's disease (AD) from two studies (i.e. Bellengue, et al. 2022 and Kunkle, et al, 2019). We also tried to extend the peaks by 500 base pairs downstream and upstream. Results of enrichment analysis remain insignificant.
 
 ![](assets/TORUS_1636_peaks.png)
 
-## Recalibration of P value distribution
+## Recalibration of P Values Brought 11747 DA peaks
 
 The P value distribution is heavily leaning towards the high end (figure below), suggesting that the null model is not a good fit to the data and the statistical testing may be too conservative. 
 
@@ -34,6 +34,8 @@ We used the package fdrtool to estimate the empirical null from the z-score and 
 Then we used qval<0.05 to obtain 11747 DA peaks with absolute log2 fold change > 0.5. Figure below is the new volcano plot. 
 
 ![](assets/volcano_qval5.png)
+
+### S-LDSC enrichment results
 
 After removing 460 down-regulated peaks, we used the 11287 peaks with window size extension (0, 1 kb, 2 kb, 5 kb down and upstream) to improve SNP covarage for S-LDSC. The fold enrichment results showed that the upregulated peaks were depleted of GWAS signals. The depletion was statistically significant in Kunkle.
 
@@ -52,7 +54,7 @@ dat1$GWAS <- "Kunkle_2019"
 dat1$padding <- c(0,1000,2000,5000)
 
 dat2 <- rbind(dat,dat1)[,c(4:5,1:3)]
-DT::datatable(dat2, caption="Baseline 2.2") %>%
+DT::datatable(dat2, caption="S-LDSC: Baseline 2.2") %>%
   formatRound(columns = c("Enrichment", "Enrichment_std_error", "Enrichment_p"), digits = 3)
 ```
 
@@ -67,9 +69,11 @@ dat.cant$padding <- c(0,1000,2000,5000)
 dat.cant$GWAS <- rep(c("Bellengue_2022", "Kunkle_2019"), each=4)
 dat.cant$padding <- rep(c(0,1000,2000,5000),2)
 
-DT::datatable(dat.cant, caption="Baseline 2.2 + candidate peaks") %>%
+DT::datatable(dat.cant[,c(4:5,1:3)], caption="S-LDSC enrichment: Baseline 2.2 + candidate peaks") %>%
   formatRound(columns = c("Enrichment", "Enrichment_std_error", "Enrichment_p"), digits = 3)
 ```
+
+### TORUS enrichment results
 
 We switched to TORUS to estimate the enrichment. The results still show negative enrichment
 
