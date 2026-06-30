@@ -1,0 +1,101 @@
+---
+title: "minnd_gene_program"
+author: "Lifan Liang"
+date: "2026-06-27"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+We obtained the pseudobulk sample that have been processed by Christina. Each sample is the sum of read count for each gene for all cells within a sequencing batch and a perturbation (including NTC). There are 107 genes targeted for Loss of function knockdown. These genes were divided into 5 gene sets. Each genes sets were perturbed and sequenced in three to four batches. After removing lowly expressed genes, we applied TMM normalization. The resulting matrix of log CPM values for 20107 genes and 402 pseudobulk samples was used for downstream analysis.
+
+
+```{r, eval=F}
+library(limma)
+library(edgeR)
+
+#### Run raw count data
+load("metadata_per_celltype.Rdata")
+load("GABA_raw_counts_geneset1to5.Rdata")
+
+dge <- DGEList(counts = GABA_counts, samples = GABA_meta)
+# Keep lowly-expressed genes (in terms of CPM)
+keep <- filterByExpr(dge, group = GABA_meta$Loss_of_function)
+dge <- dge[keep, , keep.lib.sizes = FALSE]
+dge <- calcNormFactors(dge, method = "TMM")
+logCPM <- cpm(dge, log = TRUE, prior.count = 0.25)
+```
+
+Regardless of the genes targeted, there is a nested batch structure with three layers: cell line, sequencing batch, and co-culture batch. The "batch" in the last paragraph referred to the sequencing batch. Essentially, cells within the same sequencing batch come from the same cell line. Each cell line was used in three to four sequencing batches. For each sequencing batch, there are two to four co-culture batches.
+
+Similar to the gene program approach by Ota et al, we ran factor analysis on the gene by pseudobulk sample matrix, ignoring batch structures. Then we regressed perturbation on the "usage" of gene programs, controlling for batch effects.
+
+
+## Factor analysis
+
+We ran semi-NMF with the full matrix with the package `flashier`. More specifically, both factors (the gene side of the program) and loadings (the sample side of the program) follow the spike and slab mixture to impose sparsity. The slab for the factors is a Normal distribution. The slab for the loadings is an Exponential distribution to enforce non-negativity.
+
+$$
+Y=LF^T + E
+$$
+
+where $Y$ is the gene expression matrix, $L$ is the sample loading, $F$ is the factor, and $E$ is the residual.
+
+We standardize the expression of each gene before running the factor analysis. We also enforce gene-specific residual variance with the option `var_type` in `flashier`. We obtained 140 factors from the result
+
+### Loadings associated with perturbation
+
+After standardizing the loadings for each program, we standardized again the loading for each program separately, and then regressed all the perturbation on the loadings for each program with the following formula in `lmer`:
+
+$$
+loading \sim perturbation + donor + (1|seq\_batch) + (1|seq\_batch:culture\_batch)
+$$
+
+The perturbation was encoded as a categorical variable with the non-targeting control (NTC) as the reference. Pooling all the perturbation improved the estimation of batch effects and the loadings in NTC samples. The coefficients of perturbation indicate the change of program activity caused by the perturbation. 
+
+![](assets/perturb2program_full_heatmap.png)
+
+
+Then we applied Benjamini-Hochberg FDR control on all the P values. $\beta$ with FDR<10% was determined as statistically significant. 64 perturbations has a significant association to any gene program.
+
+![](assets/perturb2program_sig_heatmap.png)
+
+
+### Enrichment analysis of the factors
+
+We applied local false sign rate (LFSR) < 5% on the factor to identify program related genes. For factors with more than 250 related genes, we selected the top 250 genes with the largest absolute Z-score (F_pm/F_psd). Then we ran enrichment analysis on the extracted gene sets with two databases: (1) GO biological process organized by MsigDB C5; (2) synGO, a database describing the function and subcellular location of synaptic proteins using Gene Ontology (GO) annotations. 16949 genes with gene symbols were used as the background gene set.
+
+Overall, there are 25 factors with no significant enrichment with any terms (FDR<20%). Yet these factors were all significantly associated with at least one perturbation. 
+
+
+The table below showed the top 5 enrichment results for each database and the LoF targets associated to each factor. Numbers in the brackets for GO terms are FDR values. Numbers in the brackets for "LoF" (the associated perturbed gene) is the regression coefficients
+
+```{r}
+library(data.table)
+dat <- read.table("data/minnd_summary_table.txt",sep="\t",header=T)
+
+DT::datatable(dat[,2:4], options=list(autoWidth=F, scrollY="600px", scrollCollapse=T,
+                                      columnDefs=list(
+  list(width="5%", targets=0),
+  list(width="45%", targets=1),
+  list(width="45%", targets=2),
+  list(width="5%", targets=3))),
+  )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Lifan Liang" />
+
+<meta name="date" content="2026-06-27" />
+
+<title>minnd_gene_program</title>
+
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.34.0/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">data_analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/LifanLiang/data_analysis">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">minnd_gene_program</h1>
+<h4 class="author">Lifan Liang</h4>
+<h4 class="date">2026-06-27</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-06-30
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>data_analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260612code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260612)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260612code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260612)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree13aaea7307bebf63469809a4643e6560a882fafatargetblank13aaea7a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/LifanLiang/data_analysis/tree/13aaea7307bebf63469809a4643e6560a882fafa" target="_blank">13aaea7</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree13aaea7307bebf63469809a4643e6560a882fafatargetblank13aaea7a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/LifanLiang/data_analysis/tree/13aaea7307bebf63469809a4643e6560a882fafa" target="_blank">13aaea7</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    data/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/minnd_gene_program.Rmd
+    Untracked:  data/minnd_summary_table.txt
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>We obtained the pseudobulk sample that have been processed by
+Christina. Each sample is the sum of read count for each gene for all
+cells within a sequencing batch and a perturbation (including NTC).
+There are 107 genes targeted for Loss of function knockdown. These genes
+were divided into 5 gene sets. Each genes sets were perturbed and
+sequenced in three to four batches. After removing lowly expressed
+genes, we applied TMM normalization. The resulting matrix of log CPM
+values for 20107 genes and 402 pseudobulk samples was used for
+downstream analysis.</p>
+<pre class="r"><code>library(limma)
+library(edgeR)
+
+#### Run raw count data
+load(&quot;metadata_per_celltype.Rdata&quot;)
+load(&quot;GABA_raw_counts_geneset1to5.Rdata&quot;)
+
+dge &lt;- DGEList(counts = GABA_counts, samples = GABA_meta)
+# Keep lowly-expressed genes (in terms of CPM)
+keep &lt;- filterByExpr(dge, group = GABA_meta$Loss_of_function)
+dge &lt;- dge[keep, , keep.lib.sizes = FALSE]
+dge &lt;- calcNormFactors(dge, method = &quot;TMM&quot;)
+logCPM &lt;- cpm(dge, log = TRUE, prior.count = 0.25)</code></pre>
+<p>Regardless of the genes targeted, there is a nested batch structure
+with three layers: cell line, sequencing batch, and co-culture batch.
+The “batch” in the last paragraph referred to the sequencing batch.
+Essentially, cells within the same sequencing batch come from the same
+cell line. Each cell line was used in three to four sequencing batches.
+For each sequencing batch, there are two to four co-culture batches.</p>
+<p>Similar to the gene program approach by Ota et al, we ran factor
+analysis on the gene by pseudobulk sample matrix, ignoring batch
+structures. Then we regressed perturbation on the “usage” of gene
+programs, controlling for batch effects.</p>
+</div>
+<div id="factor-analysis" class="section level2">
+<h2>Factor analysis</h2>
+<p>We ran semi-NMF with the full matrix with the package
+<code>flashier</code>. More specifically, both factors (the gene side of
+the program) and loadings (the sample side of the program) follow the
+spike and slab mixture to impose sparsity. The slab for the factors is a
+Normal distribution. The slab for the loadings is an Exponential
+distribution to enforce non-negativity.</p>
+<p><span class="math display">\[
+Y=LF^T + E
+\]</span></p>
+<p>where <span class="math inline">\(Y\)</span> is the gene expression
+matrix, <span class="math inline">\(L\)</span> is the sample loading,
+<span class="math inline">\(F\)</span> is the factor, and <span
+class="math inline">\(E\)</span> is the residual.</p>
+<p>We standardize the expression of each gene before running the factor
+analysis. We also enforce gene-specific residual variance with the
+option <code>var_type</code> in <code>flashier</code>. We obtained 140
+factors from the result</p>
+<div id="loadings-associated-with-perturbation" class="section level3">
+<h3>Loadings associated with perturbation</h3>
+<p>After standardizing the loadings for each program, we standardized
+again the loading for each program separately, and then regressed all
+the perturbation on the loadings for each program with the following
+formula in <code>lmer</code>:</p>
+<p><span class="math display">\[
+loading \sim perturbation + donor + (1|seq\_batch) +
+(1|seq\_batch:culture\_batch)
+\]</span></p>
+<p>The perturbation was encoded as a categorical variable with the
+non-targeting control (NTC) as the reference. Pooling all the
+perturbation improved the estimation of batch effects and the loadings
+in NTC samples. The coefficients of perturbation indicate the change of
+program activity caused by the perturbation.</p>
+<p><img src="assets/perturb2program_full_heatmap.png" /></p>
+<p>Then we applied Benjamini-Hochberg FDR control on all the P values.
+<span class="math inline">\(\beta\)</span> with FDR&lt;10% was
+determined as statistically significant. 64 perturbations has a
+significant association to any gene program.</p>
+<p><img src="assets/perturb2program_sig_heatmap.png" /></p>
+</div>
+<div id="enrichment-analysis-of-the-factors" class="section level3">
+<h3>Enrichment analysis of the factors</h3>
+<p>We applied local false sign rate (LFSR) &lt; 5% on the factor to
+identify program related genes. For factors with more than 250 related
+genes, we selected the top 250 genes with the largest absolute Z-score
+(F_pm/F_psd). Then we ran enrichment analysis on the extracted gene sets
+with two databases: (1) GO biological process organized by MsigDB C5;
+(2) synGO, a database describing the function and subcellular location
+of synaptic proteins using Gene Ontology (GO) annotations. 16949 genes
+with gene symbols were used as the background gene set.</p>
+<p>Overall, there are 25 factors with no significant enrichment with any
+terms (FDR&lt;20%). Yet these factors were all significantly associated
+with at least one perturbation.</p>
+<p>The table below showed the top 5 enrichment results for each database
+and the LoF targets associated to each factor. Numbers in the brackets
+for GO terms are FDR values. Numbers in the brackets for “LoF” (the
+associated perturbed gene) is the regression coefficients</p>
+<pre class="r"><code>library(data.table)
+dat &lt;- read.table(&quot;data/minnd_summary_table.txt&quot;,sep=&quot;\t&quot;,header=T)
+
+DT::datatable(dat[,2:4], options=list(autoWidth=F, scrollY=&quot;600px&quot;, scrollCollapse=T,
+                                      columnDefs=list(
+  list(width=&quot;5%&quot;, targets=0),
+  list(width=&quot;45%&quot;, targets=1),
+  list(width=&quot;45%&quot;, targets=2),
+  list(width=&quot;5%&quot;, targets=3))),
+  )</code></pre>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-fb09ae03293b22c7623d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-fb09ae03293b22c7623d">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140"],["GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (5.46e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION (3.37e-08) | GOBP_NITROGEN_COMPOUND_TRANSPORT (3.37e-08) | GOBP_PROTEIN_TRANSPORT (5.46e-08) | GOBP_INTRACELLULAR_TRANSPORT (1.30e-07) | GOBP_MAINTENANCE_OF_SYNAPSE_STRUCTURE (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_PROTON_TRANSMEMBRANE_TRANSPORT (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_MITOCHONDRIAL_ELECTRON_TRANSPORT_NADH_TO_UBIQUINONE (1.27e-06)","GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.27e-06)","GOBP_TRANSLATION (3.37e-08) | GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (5.46e-08) | GOBP_MITOCHONDRIAL_TRANSLATION (1.30e-07) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_PROTEASOMAL_UBIQUITIN_INDEPENDENT_PROTEIN_CATABOLIC_PROCESS (3.37e-08) | GOBP_CD8_POSITIVE_ALPHA_BETA_T_CELL_HOMEOSTASIS (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (5.46e-08) | GOBP_NEGATIVE_REGULATION_OF_REGULATORY_T_CELL_DIFFERENTIATION (1.30e-07) | GOBP_CD8_POSITIVE_ALPHA_BETA_T_CELL_DIFFERENTIATION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.30e-07) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (5.46e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.30e-07) | GOBP_CELLULAR_RESPIRATION (1.27e-06)","GOBP_PROTON_TRANSMEMBRANE_TRANSPORT (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_RIBOSE_PHOSPHATE_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_CYTOPLASMIC_TRANSLATION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (5.46e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_CYTOPLASMIC_TRANSLATION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_RIBOSOMAL_SMALL_SUBUNIT_BIOGENESIS (5.46e-08) | GOBP_NEGATIVE_REGULATION_OF_RNA_SPLICING (1.30e-07) | GOBP_OXIDATIVE_PHOSPHORYLATION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (5.46e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_CELLULAR_RESPIRATION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_PROTON_TRANSMEMBRANE_TRANSPORT (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (1.30e-07) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_CELLULAR_RESPIRATION (5.46e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.30e-07) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_CELLULAR_RESPIRATION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (5.46e-08) | GOBP_CELLULAR_RESPIRATION (1.30e-07) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (5.46e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (5.46e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (5.46e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.30e-07) | GOBP_CELLULAR_RESPIRATION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_MITOCHONDRIAL_ELECTRON_TRANSPORT_NADH_TO_UBIQUINONE (5.46e-08) | GOBP_PROTON_TRANSMEMBRANE_TRANSPORT (1.30e-07) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.27e-06)","GOBP_MULTI_PASS_TRANSMEMBRANE_PROTEIN_INSERTION_INTO_ER_MEMBRANE (3.37e-08) | GOBP_TRANSLATIONAL_INITIATION (3.37e-08) | GOBP_TRANSLATION (5.46e-08) | GOBP_CELL_REDOX_HOMEOSTASIS (1.30e-07) | GOBP_CYTOPLASMIC_TRANSLATION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_TRANSLATION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (5.46e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.30e-07) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.30e-07) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS (3.37e-08) | GOBP_RIBOSOME_BIOGENESIS (5.46e-08) | GOBP_TRANSLATION (1.30e-07) | GOBP_RIBOSOMAL_SMALL_SUBUNIT_BIOGENESIS (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_CD8_POSITIVE_ALPHA_BETA_T_CELL_HOMEOSTASIS (5.46e-08) | GOBP_MRNA_METABOLIC_PROCESS (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (5.46e-08) | GOBP_CELLULAR_RESPIRATION (1.30e-07) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_TRANSLATION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_TRANSLATION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_CD8_POSITIVE_ALPHA_BETA_T_CELL_HOMEOSTASIS (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_TRANSLATION (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_CELLULAR_RESPIRATION (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (1.30e-07) | GOBP_ATP_METABOLIC_PROCESS (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_TRANSMEMBRANE_TRANSPORT (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (5.46e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.30e-07) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_PROTEASOMAL_UBIQUITIN_INDEPENDENT_PROTEIN_CATABOLIC_PROCESS (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_RRNA_MODIFICATION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (5.46e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (5.46e-08) | GOBP_CELLULAR_RESPIRATION (1.30e-07) | GOBP_GENERATION_OF_PRECURSOR_METABOLITES_AND_ENERGY (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (5.46e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.30e-07) | GOBP_CELLULAR_RESPIRATION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_CYTOPLASMIC_TRANSLATION (5.46e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (5.46e-08) | GOBP_CELLULAR_RESPIRATION (1.30e-07) | GOBP_REGULATION_OF_PROTEOLYSIS (1.27e-06)","GOBP_TRANSLATION (3.37e-08) | GOBP_EMBRYONIC_BRAIN_DEVELOPMENT (3.37e-08) | GOBP_TRANSLATION (5.46e-08) | GOBP_EMBRYONIC_BRAIN_DEVELOPMENT (1.30e-07) | GOBP_TRANSLATION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_OXIDATIVE_PHOSPHORYLATION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)","GOBP_DOUBLE_STRAND_BREAK_REPAIR_VIA_SINGLE_STRAND_ANNEALING (3.37e-08) | GOBP_DNA_DOUBLE_STRAND_BREAK_PROCESSING (3.37e-08) | GOBP_DOUBLE_STRAND_BREAK_REPAIR_VIA_SINGLE_STRAND_ANNEALING (5.46e-08) | GOBP_DNA_DOUBLE_STRAND_BREAK_PROCESSING (1.30e-07) | GOBP_DOUBLE_STRAND_BREAK_REPAIR_VIA_SINGLE_STRAND_ANNEALING (1.27e-06)","GOBP_TRANSLATION (3.37e-08) | GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION_TO_MITOCHONDRION (5.46e-08) | GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS (1.30e-07) | GOBP_REGULATION_OF_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (5.46e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_TRANSLATION (1.27e-06)","GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (5.46e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.30e-07) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_PROTEASOMAL_UBIQUITIN_INDEPENDENT_PROTEIN_CATABOLIC_PROCESS (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (5.46e-08) | GOBP_CYTOPLASMIC_TRANSLATION (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (3.37e-08) | GOBP_RNA_SPLICING (5.46e-08) | GOBP_RNA_SPLICING_VIA_TRANSESTERIFICATION_REACTIONS (1.30e-07) | GOBP_PROCESS_UTILIZING_AUTOPHAGIC_MECHANISM (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_PROTON_TRANSMEMBRANE_TRANSPORT (3.37e-08) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (5.46e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_CELLULAR_RESPIRATION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_PROTEASOMAL_UBIQUITIN_INDEPENDENT_PROTEIN_CATABOLIC_PROCESS (5.46e-08) | GOBP_TRANSLATION (1.30e-07) | GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS (1.27e-06)","GOBP_RIBOSE_PHOSPHATE_BIOSYNTHETIC_PROCESS (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_ORGANOPHOSPHATE_METABOLIC_PROCESS (1.30e-07) | GOBP_NEURONAL_ACTION_POTENTIAL (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS (3.37e-08) | GOBP_PROTEIN_RNA_COMPLEX_ORGANIZATION (3.37e-08) | GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS (5.46e-08) | GOBP_PROTEIN_RNA_COMPLEX_ORGANIZATION (1.30e-07) | GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_TRANSLATION (1.30e-07) | GOBP_OXIDATIVE_PHOSPHORYLATION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_SPLICEOSOMAL_SNRNP_ASSEMBLY (3.37e-08) | GOBP_U2_TYPE_PRESPLICEOSOME_ASSEMBLY (5.46e-08) | GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS (1.30e-07) | GOBP_CD8_POSITIVE_ALPHA_BETA_T_CELL_HOMEOSTASIS (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_ESTABLISHMENT_OF_LOCALIZATION_IN_CELL (1.30e-07) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_TRANSLATION (1.27e-06)","GOBP_NEGATIVE_REGULATION_OF_MOLECULAR_FUNCTION (3.37e-08) | GOBP_NUCLEUS_LOCALIZATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_MOLECULAR_FUNCTION (5.46e-08) | GOBP_NUCLEUS_LOCALIZATION (1.30e-07) | GOBP_NEGATIVE_REGULATION_OF_MOLECULAR_FUNCTION (1.27e-06)","GOBP_SUPRAMOLECULAR_FIBER_ORGANIZATION (3.37e-08) | GOBP_ACTIN_FILAMENT_ORGANIZATION (3.37e-08) | GOBP_DETOXIFICATION (5.46e-08) | GOBP_DETOXIFICATION_OF_COPPER_ION (1.30e-07) | GOBP_RESPONSE_TO_TOXIC_SUBSTANCE (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_MYOBLAST_FUSION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)","GOBP_OOGENESIS (3.37e-08) | GOBP_OOCYTE_DIFFERENTIATION (3.37e-08) | GOBP_FEMALE_GAMETE_GENERATION (5.46e-08) | GOBP_OOGENESIS (1.30e-07) | GOBP_OOCYTE_DIFFERENTIATION (1.27e-06)","GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_MITOCHONDRIAL_ELECTRON_TRANSPORT_CYTOCHROME_C_TO_OXYGEN (5.46e-08) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.30e-07) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_NEUROGENESIS (3.37e-08) | GOBP_GENERATION_OF_NEURONS (3.37e-08) | GOBP_REGULATION_OF_NEUROGENESIS (5.46e-08) | GOBP_INTERLEUKIN_11_MEDIATED_SIGNALING_PATHWAY (1.30e-07) | GOBP_REGULATION_OF_MULTICELLULAR_ORGANISMAL_DEVELOPMENT (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_TRANSLATION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)","GOBP_MACROPHAGE_APOPTOTIC_PROCESS (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_CATECHOLAMINE_SECRETION (3.37e-08) | GOBP_CAMP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_REGULATION_OF_NEURON_PROJECTION_DEVELOPMENT (1.30e-07) | GOBP_PURINE_NUCLEOTIDE_TRANSPORT (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_ENDOLYSOSOMAL_TOLL_LIKE_RECEPTOR_SIGNALING_PATHWAY (3.37e-08) | GOBP_CHOLESTEROL_BIOSYNTHETIC_PROCESS_VIA_DESMOSTEROL (3.37e-08) | GOBP_PORE_COMPLEX_ASSEMBLY (5.46e-08) | GOBP_REGULATION_OF_PROTEIN_LOCALIZATION_TO_ENDOPLASMIC_RETICULUM (1.30e-07) | GOBP_REGULATION_OF_CYTOPLASMIC_PATTERN_RECOGNITION_RECEPTOR_SIGNALING_PATHWAY (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_CELLULAR_RESPIRATION (5.46e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.30e-07) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.30e-07) | GOBP_PROTON_TRANSMEMBRANE_TRANSPORT (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (1.30e-07) | GOBP_ELECTRON_TRANSPORT_CHAIN (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_TRANSLATION (5.46e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_TRANSLATION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CELL_CELL_SIGNALING (3.37e-08) | GOBP_PATTERN_SPECIFICATION_PROCESS (3.37e-08) | GOBP_REGULATION_OF_SYSTEM_PROCESS (5.46e-08) | GOBP_REGULATION_OF_HEART_CONTRACTION (1.30e-07) | GOBP_SENSORY_SYSTEM_DEVELOPMENT (1.27e-06)","GOBP_BICARBONATE_TRANSPORT (3.37e-08) | GOBP_BICARBONATE_TRANSPORT (3.37e-08) | GOBP_BICARBONATE_TRANSPORT (5.46e-08) | GOBP_BICARBONATE_TRANSPORT (1.30e-07) | GOBP_BICARBONATE_TRANSPORT (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (5.46e-08) | GOBP_TRANSLATION (1.30e-07) | GOBP_MYOBLAST_FUSION (1.27e-06)","GOBP_SPERMATID_DIFFERENTIATION (3.37e-08) | GOBP_ANATOMICAL_STRUCTURE_MATURATION (3.37e-08) | GOBP_SPERM_CAPACITATION (5.46e-08) | GOBP_CELL_MATURATION (1.30e-07) | GOBP_CELLULAR_PROCESS_INVOLVED_IN_REPRODUCTION_IN_MULTICELLULAR_ORGANISM (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_SOMITE_DEVELOPMENT (3.37e-08) | GOBP_SOMITE_DEVELOPMENT (3.37e-08) | GOBP_SOMITE_DEVELOPMENT (5.46e-08) | GOBP_SOMITE_DEVELOPMENT (1.30e-07) | GOBP_SOMITE_DEVELOPMENT (1.27e-06)","GOBP_NEGATIVE_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_REGULATION_OF_SYNCYTIUM_FORMATION_BY_PLASMA_MEMBRANE_FUSION (3.37e-08) | GOBP_MYOBLAST_FUSION (5.46e-08) | GOBP_CYTOPLASMIC_TRANSLATION (1.30e-07) | GOBP_SYNCYTIUM_FORMATION (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_RESPONSE_TO_INCREASED_OXYGEN_LEVELS (3.37e-08) | GOBP_RESPONSE_TO_INCREASED_OXYGEN_LEVELS (3.37e-08) | GOBP_RESPONSE_TO_INCREASED_OXYGEN_LEVELS (5.46e-08) | GOBP_RESPONSE_TO_INCREASED_OXYGEN_LEVELS (1.30e-07) | GOBP_RESPONSE_TO_INCREASED_OXYGEN_LEVELS (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_ATP_BIOSYNTHETIC_PROCESS (5.46e-08) | GOBP_NUCLEOSIDE_TRIPHOSPHATE_BIOSYNTHETIC_PROCESS (1.30e-07) | GOBP_ATP_SYNTHESIS_COUPLED_ELECTRON_TRANSPORT (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_G_PROTEIN_COUPLED_RECEPTOR_SIGNALING_PATHWAY (3.37e-08) | GOBP_POSITIVE_REGULATION_OF_PEPTIDE_SECRETION (3.37e-08) | GOBP_DETECTION_OF_CHEMICAL_STIMULUS_INVOLVED_IN_SENSORY_PERCEPTION_OF_TASTE (5.46e-08) | GOBP_CALCIUM_ION_TRANSPORT (1.30e-07) | GOBP_REGULATION_OF_PEPTIDE_TRANSPORT (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","GOBP_CYTOPLASMIC_TRANSLATION (3.37e-08) | GOBP_TRANSLATION (3.37e-08) | GOBP_CYTOPLASMIC_TRANSLATION (5.46e-08) | GOBP_TRANSLATION (1.30e-07) | GOBP_CYTOPLASMIC_TRANSLATION (1.27e-06)","GOBP_OXIDATIVE_PHOSPHORYLATION (3.37e-08) | GOBP_PROTON_MOTIVE_FORCE_DRIVEN_ATP_SYNTHESIS (3.37e-08) | GOBP_PROTON_TRANSMEMBRANE_TRANSPORT (5.46e-08) | GOBP_CYTOPLASMIC_TRANSLATION (1.30e-07) | GOBP_ATP_BIOSYNTHETIC_PROCESS (1.27e-06)","GOBP_RESPONSE_TO_GAMMA_RADIATION (3.37e-08) | GOBP_RESPONSE_TO_IONIZING_RADIATION (3.37e-08) | GOBP_INTRINSIC_APOPTOTIC_SIGNALING_PATHWAY_BY_P53_CLASS_MEDIATOR (5.46e-08) | GOBP_INTRINSIC_APOPTOTIC_SIGNALING_PATHWAY_IN_RESPONSE_TO_DNA_DAMAGE (1.30e-07) | GOBP_INTRINSIC_APOPTOTIC_SIGNALING_PATHWAY_IN_RESPONSE_TO_DNA_DAMAGE_BY_P53_CLASS_MEDIATOR (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"],["postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | synaptic vesicle proton loading (GO:0097401) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | postsynaptic ribosome (1.27e-06)","structural constituent of postsynaptic density (GO:0098919) (3.37e-08) | structural constituent of active zone (GO:0098882) (3.37e-08) | postsynaptic density (GO:0014069) (5.46e-08) | structural constituent of postsynaptic density (GO:0098919) (1.30e-07) | structural constituent of active zone (GO:0098882) (1.27e-06)","synaptic vesicle proton loading (GO:0097401) (3.37e-08) | postsynaptic proteasome (3.37e-08) | presynaptic proteasome (5.46e-08) | protein catabolic process at presynapse (GO:0140247) (1.30e-07) | protein catabolic process at postsynapse (GO:0140249) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | postsynaptic cytosol (GO:0099524) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | postsynaptic proteasome (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | extrinsic component of synaptic vesicle membrane (GO:0098850) (1.27e-06)","synapse (GO:0045202) (3.37e-08) | protein catabolic process at postsynapse (GO:0140249) (3.37e-08) | regulation of synaptic vesicle endocytosis (GO:1900242) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | postsynaptic proteasome (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | translation at postsynapse (GO:0140242) (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | postsynaptic ribosome (5.46e-08) | presynaptic ribosome (1.30e-07) | translation at presynapse (GO:0140236) (1.27e-06)","protein catabolic process at presynapse (GO:0140247) (3.37e-08) | postsynaptic proteasome (3.37e-08) | presynaptic proteasome (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | protein catabolic process at presynapse (GO:0140247) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | regulation of translation at postsynapse, modulating synaptic transmission (GO:0099578) (5.46e-08) | protein catabolic process at presynapse (GO:0140247) (1.30e-07) | protein catabolic process at postsynapse (GO:0140249) (1.27e-06)","postsynaptic cytosol (GO:0099524) (3.37e-08) | regulation of synaptic vesicle endocytosis (GO:1900242) (3.37e-08) | presynaptic endocytosis (GO:0140238) (5.46e-08) | structural constituent of postsynaptic actin cytoskeleton (GO:0098973) (1.30e-07) | postsynaptic actin cytoskeleton (GO:0098871) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | postsynaptic endosome (GO:0098845) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | presynaptic endocytosis (GO:0140238) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | structural constituent of postsynaptic density (GO:0098919) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | postsynaptic proteasome (1.27e-06)","protein catabolic process at postsynapse (GO:0140249) (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (3.37e-08) | postsynaptic proteasome (5.46e-08) | presynaptic proteasome (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","synapse (GO:0045202) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | translation at postsynapse (GO:0140242) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | regulation of postsynapse organization (GO:0099175) (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | postsynaptic proteasome (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | postsynaptic ribosome (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | regulation of postsynaptic density assembly (GO:0099151) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | synaptic vesicle proton loading (GO:0097401) (5.46e-08) | protein catabolic process at presynapse (GO:0140247) (1.30e-07) | protein catabolic process at postsynapse (GO:0140249) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic density (GO:0014069) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | translation at postsynapse (GO:0140242) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","structural constituent of postsynaptic density (GO:0098919) (3.37e-08) | regulation of calcium-dependent activation of synaptic vesicle fusion (GO:0150037) (3.37e-08) | regulation of presynaptic cytosolic calcium levels (GO:0099509) (5.46e-08) | structural constituent of active zone (GO:0098882) (1.30e-07) | regulation of modification of postsynaptic structure (GO:0099159) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | neurotransmitter uptake (GO:0001504) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | synapse (GO:0045202) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | protein catabolic process at postsynapse (GO:0140249) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","synaptic vesicle proton loading (GO:0097401) (3.37e-08) | synapse (GO:0045202) (3.37e-08) | synaptic vesicle proton loading (GO:0097401) (5.46e-08) | synapse (GO:0045202) (1.30e-07) | synaptic vesicle proton loading (GO:0097401) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | postsynaptic ribosome (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","presynaptic dense core vesicle exocytosis (GO:0099525) (3.37e-08) | synaptic vesicle priming (GO:0016082) (3.37e-08) | presynaptic dense core vesicle exocytosis (GO:0099525) (5.46e-08) | synaptic vesicle priming (GO:0016082) (1.30e-07) | presynaptic dense core vesicle exocytosis (GO:0099525) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | postsynaptic ribosome (5.46e-08) | presynaptic ribosome (1.30e-07) | translation at presynapse (GO:0140236) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic specialization assembly (GO:0098698) (3.37e-08) | postsynaptic specialization assembly (GO:0098698) (3.37e-08) | postsynaptic specialization assembly (GO:0098698) (5.46e-08) | postsynaptic specialization assembly (GO:0098698) (1.30e-07) | postsynaptic specialization assembly (GO:0098698) (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | synapse (GO:0045202) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","presynaptic membrane (GO:0042734) (3.37e-08) | postsynaptic membrane (GO:0045211) (3.37e-08) | presynaptic membrane (GO:0042734) (5.46e-08) | postsynaptic membrane (GO:0045211) (1.30e-07) | presynaptic membrane (GO:0042734) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | protein catabolic process at presynapse (GO:0140247) (1.27e-06)","postsynapse (GO:0098794) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | translation at postsynapse (GO:0140242) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","synaptic vesicle endocytosis (GO:0048488) (3.37e-08) | presynaptic endosome (GO:0098830) (3.37e-08) | postsynaptic endosome (GO:0098845) (5.46e-08) | presynapse (GO:0098793) (1.30e-07) | synaptic vesicle endocytosis (GO:0048488) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","anterograde dendritic transport of neurotransmitter receptor complex (GO:0098971) (3.37e-08) | anterograde dendritic transport of neurotransmitter receptor complex (GO:0098971) (3.37e-08) | anterograde dendritic transport of neurotransmitter receptor complex (GO:0098971) (5.46e-08) | anterograde dendritic transport of neurotransmitter receptor complex (GO:0098971) (1.30e-07) | anterograde dendritic transport of neurotransmitter receptor complex (GO:0098971) (1.27e-06)","regulation of modification of postsynaptic structure (GO:0099159) (3.37e-08) | regulation of modification of postsynaptic structure (GO:0099159) (3.37e-08) | regulation of modification of postsynaptic structure (GO:0099159) (5.46e-08) | regulation of modification of postsynaptic structure (GO:0099159) (1.30e-07) | regulation of modification of postsynaptic structure (GO:0099159) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","structural constituent of postsynaptic density (GO:0098919) (3.37e-08) | structural constituent of postsynaptic density (GO:0098919) (3.37e-08) | structural constituent of postsynaptic density (GO:0098919) (5.46e-08) | structural constituent of postsynaptic density (GO:0098919) (1.30e-07) | structural constituent of postsynaptic density (GO:0098919) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","presynaptic active zone cytoplasmic component (GO:0098831) (3.37e-08) | anterograde dendritic transport (GO:0098937) (3.37e-08) | presynaptic modulation of chemical synaptic transmission (GO:0099171) (5.46e-08) | postsynaptic density, intracellular component (GO:0099092) (1.30e-07) | synaptic vesicle clustering (GO:0097091) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","calcium-dependent activation of synaptic vesicle fusion (GO:0099502) (3.37e-08) | presynaptic actin cytoskeleton organization (GO:0099140) (3.37e-08) | presynaptic endocytosis (GO:0140238) (5.46e-08) | postsynaptic cytosol (GO:0099524) (1.30e-07) | presynaptic cytosol (GO:0099523) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","synaptic cleft (GO:0043083) (3.37e-08) | ligand-gated ion channel activity involved in regulation of presynaptic membrane potential (GO:0099507) (3.37e-08) | extracellular matrix of synaptic cleft (GO:0098965) (5.46e-08) | synaptic cleft (GO:0043083) (1.30e-07) | ligand-gated ion channel activity involved in regulation of presynaptic membrane potential (GO:0099507) (1.27e-06)","integral component of postsynaptic density membrane (GO:0099061) (3.37e-08) | transmitter-gated ion channel activity involved in regulation of postsynaptic membrane potential (GO:1904315) (3.37e-08) | integral component of postsynaptic specialization membrane (GO:0099060) (5.46e-08) | integral component of presynaptic active zone membrane (GO:0099059) (1.30e-07) | regulation of neurotransmitter uptake (GO:0051580) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | translation at postsynapse (GO:0140242) (5.46e-08) | protein catabolic process at presynapse (GO:0140247) (1.30e-07) | protein catabolic process at postsynapse (GO:0140249) (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | postsynaptic density (GO:0014069) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","presynaptic dense core vesicle exocytosis (GO:0099525) (3.37e-08) | synapse assembly (GO:0007416) (3.37e-08) | modification of postsynaptic actin cytoskeleton (GO:0098885) (5.46e-08) | postsynapse to nucleus signaling pathway (GO:0099527) (1.30e-07) | regulation protein catabolic process at postsynapse (GO:0140252) (1.27e-06)","integral component of presynaptic active zone membrane (GO:0099059) (3.37e-08) | regulation of postsynaptic membrane neurotransmitter receptor levels (GO:0099072) (3.37e-08) | presynaptic endocytic zone (GO:0098833) (5.46e-08) | synaptic vesicle to endosome fusion (GO:0016189) (1.30e-07) | neurotransmitter receptor transport, endosome to postsynaptic membrane (GO:0098887) (1.27e-06)","extracellular matrix of synaptic cleft (GO:0098965) (3.37e-08) | postsynapse organization (GO:0099173) (3.37e-08) | regulation of postsynaptic density assembly (GO:0099151) (5.46e-08) | regulation of synapse organization (GO:0050807) (1.30e-07) | extracellular matrix of synaptic cleft (GO:0098965) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ER (3.37e-08) | postsynaptic ER (3.37e-08) | postsynaptic ER (5.46e-08) | postsynaptic ER (1.30e-07) | postsynaptic ER (1.27e-06)","trans-synaptic signaling by BDNF, modulating synaptic transmission (GO:0099183) (3.37e-08) | regulation of postsynaptic membrane potential (GO:0060078) (3.37e-08) | integral component of postsynaptic membrane (GO:0099055) (5.46e-08) | integral component of presynaptic membrane (GO:0099056) (1.30e-07) | integral component of synaptic membrane (GO:0099699) (1.27e-06)","translation at postsynapse (GO:0140242) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","maintenance of postsynaptic specialization structure (GO:0098880) (3.37e-08) | regulation of synaptic vesicle endocytosis (GO:1900242) (3.37e-08) | regulation of translation at postsynapse, modulating synaptic transmission (GO:0099578) (5.46e-08) | regulation of postsynaptic neurotransmitter receptor endocytosis (GO:0099149) (1.30e-07) | maintenance of postsynaptic specialization structure (GO:0098880) (1.27e-06)","ligand-gated ion channel activity involved in regulation of presynaptic membrane potential (GO:0099507) (3.37e-08) | postsynaptic proteasome (3.37e-08) | presynaptic proteasome (5.46e-08) | protein catabolic process at presynapse (GO:0140247) (1.30e-07) | protein catabolic process at postsynapse (GO:0140249) (1.27e-06)","integral component of presynaptic ER membrane (3.37e-08) | integral component of postsynaptic ER membrane (3.37e-08) | postsynaptic recycling endosome (GO:0098837) (5.46e-08) | neurotransmitter receptor transport to postsynaptic membrane (GO:0098969) (1.30e-07) | integral component of postsynaptic density membrane (GO:0099061) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","synaptic vesicle proton loading (GO:0097401) (3.37e-08) | neuronal dense core vesicle (GO:0098992) (3.37e-08) | postsynaptic ribosome (5.46e-08) | presynaptic ribosome (1.30e-07) | translation at presynapse (GO:0140236) (1.27e-06)","anchored component of synaptic vesicle membrane (GO:0098993) (3.37e-08) | postsynaptic proteasome (3.37e-08) | presynaptic proteasome (5.46e-08) | protein catabolic process at presynapse (GO:0140247) (1.30e-07) | protein catabolic process at postsynapse (GO:0140249) (1.27e-06)","postsynaptic proteasome (3.37e-08) | presynaptic proteasome (3.37e-08) | protein catabolic process at presynapse (GO:0140247) (5.46e-08) | protein catabolic process at postsynapse (GO:0140249) (1.30e-07) | postsynaptic ribosome (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)"," (3.37e-08) |  (3.37e-08) |  (5.46e-08) |  (1.30e-07) |  (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | presynapse (GO:0098793) (1.27e-06)","postsynaptic ribosome (3.37e-08) | presynaptic ribosome (3.37e-08) | translation at presynapse (GO:0140236) (5.46e-08) | translation at postsynapse (GO:0140242) (1.30e-07) | synapse (GO:0045202) (1.27e-06)","regulation of postsynapse assembly (GO:0150052) (3.37e-08) | postsynaptic ribosome (3.37e-08) | presynaptic ribosome (5.46e-08) | translation at presynapse (GO:0140236) (1.30e-07) | translation at postsynapse (GO:0140242) (1.27e-06)","postsynaptic density, intracellular component (GO:0099092) (3.37e-08) | extracellular matrix of synaptic cleft (GO:0098965) (3.37e-08) | synaptic vesicle budding from endosome (GO:0016182) (5.46e-08) | synaptic vesicle endocytosis (GO:0048488) (1.30e-07) | regulation of postsynaptic neurotransmitter receptor diffusion trapping (GO:0150054) (1.27e-06)","calcium:cation antiporter activity involved in regulation of postsynaptic cytosolic calcium ion levels (GO:1905060) (3.37e-08) | extracellular matrix of synaptic cleft (GO:0098965) (3.37e-08) | regulation of postsynaptic neurotransmitter receptor diffusion trapping (GO:0150054) (5.46e-08) | anterograde dendritic transport of neurotransmitter receptor complex (GO:0098971) (1.30e-07) | synaptic vesicle cycle (GO:0099504) (1.27e-06)","regulation of presynapse assembly (GO:1905606) (3.37e-08) | retrograde trans-synaptic signaling by trans-synaptic protein complex (GO:0098942) (3.37e-08) | regulation of calcium-dependent activation of synaptic vesicle fusion (GO:0150037) (5.46e-08) | regulation of synaptic membrane adhesion (GO:0099179) (1.30e-07) | structural constituent of active zone (GO:0098882) (1.27e-06)","presynaptic modulation of chemical synaptic transmission (GO:0099171) (3.37e-08) | extrinsic component of presynaptic membrane (GO:0098888) (3.37e-08) | regulation of postsynaptic membrane potential (GO:0060078) (5.46e-08) | extrinsic component of postsynaptic membrane (GO:0098890) (1.30e-07) | integral component of synaptic vesicle membrane (GO:0030285) (1.27e-06)","extrinsic component of postsynaptic membrane (GO:0098890) (3.37e-08) | regulation of protein catabolic process at postsynapse, modulating synaptic transmission (GO:0099576) (3.37e-08) | regulation of postsynaptic membrane potential (GO:0060078) (5.46e-08) | regulation of modification of postsynaptic actin cytoskeleton (GO:1905274) (1.30e-07) | voltage-gated ion channel activity involved in regulation of presynaptic membrane potential (GO:0099508) (1.27e-06)"],["ANK2 (0.88); AUTS2 (0.92); CUL3 (0.81); DSCAM (0.87); DYNC1H1 (1.08); EBF3 (0.86); KMT2A (1.01); NF1 (1.07); NIPBL (1.30); PHF21A (0.93); RFX3 (0.76); SATB2 (0.85); SCN1A (0.76); TCF7L2 (0.81); TLK2 (0.86)","NAA15 (-1.26)","CASKIN1 (0.82); VEZF1 (0.81); WAC (1.08); ZNF823 (1.10)","CUL1 (0.83)","MED13 (1.19); NF1 (-1.10)",null,"CACNA1G (-0.80); CHD8 (-0.91); CUL1 (-0.84); DSCAM (-0.76); GABRA1 (-1.09); GRIA3 (-1.20); KMT2A (-0.94); KMT2C (-1.01); RB1CC1 (-1.14); RFX3 (-0.74); SATB2 (-0.77); SCN2A (-0.82); SMARCC2 (-0.85); TLK2 (-0.94); XPO7 (-0.76)",null,"MED13 (1.56)","PTEN (0.82)","MED23 (1.14)","ANKRD11 (2.35); NF1 (1.39)","CACNA1G (-1.69); GABRA1 (2.96)","CUL1 (1.60); TRIO (1.77)",null,null,"RB1CC1 (1.86)","CACNA1G (4.31)","ANKRD11 (3.83); MED13 (2.49)","KMT2C (3.11); MED13 (3.09)","TRIO (4.78)","GABRA1 (1.37); KMT2C (1.55)","CUL1 (3.68)","PHF21A (4.49); RFX3 (3.24)","ANKRD11 (2.17); ARID1B (1.50); DLL1 (2.82); RFX3 (1.60)","DNMT3A (1.35); POGZ (1.23)","CACNA1G (1.28); GRIA3 (1.61); MED13 (1.61); POGZ (1.25); RB1CC1 (1.32)","DNMT3A (1.35); GRIA3 (1.43); POGZ (1.30); PTEN (1.42); SP4 (1.43)",null,"MED13 (2.49)","KMT2C (1.48); PHF21A (2.61)","KMT2C (1.81)","CACNA1G (1.75); GABRA1 (1.56); MED13 (2.58); TSC1 (1.84)","AKAP11 (2.84); GRIA3 (1.92); POGZ (2.67)","GRIA3 (3.96); NF1 (1.65); RFX3 (1.97)","CACNA1G (3.53); GABRA1 (-1.67)","MBD5 (4.67)","GABRA1 (2.31); MED13 (1.47)","CHD8 (6.21)","GABRA1 (4.25)","DNMT3A (4.98)","ANKRD11 (1.99); ARID1B (1.59); ASH1L (1.92); CUL1 (1.37); KMT2C (2.98); RB1CC1 (1.88); XPO7 (2.01)","DLL1 (4.41)","ANK2 (6.37)","KDM6B (4.32); NAA15 (2.00); SHANK3 (2.27)","AKAP11 (2.49); SMARCC2 (2.60)","CACNA1C (2.29); FOXN2 (3.15); NF1 (2.67); PTEN (2.38)","GRIA3 (2.78); KMT2C (2.02); RFX3 (2.35)","POGZ (3.75); SMARCC2 (2.00)","GABRA1 (4.48)","GRIA3 (4.62)","GRIA3 (6.17)","RB1CC1 (4.96); SHANK3 (2.13); TLK2 (2.64)","KDM6B (3.54); MED13L (3.70)","GRIA3 (1.84); GRIN2A (1.47); PHF21A (1.48); PTEN (4.01); TSC1 (2.28)","AKAP11 (2.52)","RFX3 (2.83); SETD1A (1.99); SP4 (2.31)","CACNA1C (2.55); CUL3 (2.13); SNAP25 (2.14); TLK2 (2.30)","CHD8 (6.18)","KMT2C (4.06); SMARCC2 (1.99)","ARID1B (4.66)","FOXN2 (3.60); POGZ (3.21); SP4 (3.32)","EPHA5 (9.61)","KMT2C (2.00); SETD1A (2.54)","AFF3 (5.88); CUL1 (1.92)","CUL3 (2.29); RB1CC1 (3.27)","FOXN2 (1.76); GRIA3 (2.19); PHF21A (2.89); SMARCC2 (2.91)","ASH1L (2.76); CACNA1G (1.60); PTEN (1.88); SHANK3 (2.08)","CACNA1C (2.90); XPO7 (2.21)","GABRA1 (1.98); RB1CC1 (1.64)","AKAP11 (2.06); SHANK3 (2.08)",null,"KDM5B (4.48)","CACNA1C (5.29); SMARCC2 (1.83)",null,"CUL1 (4.35); RB1CC1 (2.21); TRIO (2.06)","KDM6B (3.27)","PHF21A (2.10); SCN1A (3.07)","XPO7 (6.76)","ARID1B (1.66); NF1 (2.28); RB1CC1 (2.21); TCF4 (1.76)","ASH1L (4.63); SP4 (2.64)","AKAP11 (-2.59); ANKRD11 (-2.60); ARID1B (-2.38); ASH1L (-2.60); CACNA1G (-2.35); CHD8 (-2.68); CUL1 (-2.38); DLL1 (-2.37); GRIA3 (-2.34); GRIN2A (-2.59); HCN4 (-2.59); KDM6B (-2.60); KMT2C (-2.26); RB1CC1 (-2.06); SCN2A (-2.60); SETD1A (-2.46); SHANK3 (-2.08); SP4 (-2.60); TRIO (-2.26); XPO7 (-2.60)","BRSK2 (2.05); SP4 (5.17)","AKAP11 (2.73); HCN4 (1.57); SHANK3 (2.12)","MED13L (2.98)","SCN2A (2.36); SETD1A (2.16)","CUL3 (3.31); RB1CC1 (1.80)","AKAP11 (1.69); ANKRD11 (1.62); PHF21A (1.45); SP4 (2.14)","SHANK3 (4.82)","KCNMA1 (1.98); RB1CC1 (1.75)","RB1CC1 (4.31)","TCF7L2 (1.57); XPO7 (2.45)","TRIO (5.36)","GRIN2A (4.53)","ASH1L (1.95); HCN4 (3.26)","BRSK2 (6.39)","DYNC1H1 (3.04); KDM6B (2.30); NIPBL (1.84); TLK2 (1.69)","DNMT3A (3.65); EBF3 (2.01); SCN1A (1.74)","SETD1A (6.12)","MED13L (2.35); RB1CC1 (1.62); SCN2A (2.24)","ASH1L (2.23); DDX3X (2.39); KDM6B (1.84); MED13 (1.66); NIPBL (3.11)","AKAP11 (4.83); SATB2 (1.77); SETD1A (3.01); TCF7L2 (2.11)","HCN4 (3.83); KDM6B (1.84)","KMT2C (5.27)","CUL3 (4.92)","AKAP11 (-2.43); ANKRD11 (-2.99); ASH1L (-2.42); CACNA1G (-3.25); CHD8 (-3.36); CUL1 (-2.85); DLL1 (-2.53); GABRA1 (-3.24); GRIA3 (-3.23); HCN4 (-3.29); KDM6B (-3.27); KMT2C (-2.91); RB1CC1 (-2.87); SCN2A (-2.11); SETD1A (-2.71); SHANK3 (-3.27); SP4 (-1.78); TRIO (-2.97); XPO7 (-2.71)","CUL1 (1.53); GABRA1 (2.08); PHF21A (1.68); XPO7 (2.96)","AUTS2 (1.55); MED23 (1.87); PTEN (5.55); STXBP1 (1.48); TSC1 (2.11)","KCNMA1 (2.66)","SATB2 (1.49)",null,"EHMT1 (1.91); KMT2A (1.72)","SETD1A (6.49)","RB1CC1 (4.83)","ANKRD11 (4.87)","SP4 (4.74)","KDM6B (5.15)","TCF7L2 (4.76)","GABRA1 (2.42); GRIA3 (4.87); SHANK3 (2.18); SP4 (1.88)","MED13L (2.07); MED23 (1.99); PHF21A (1.61)","TRIP6 (6.67)","ARID1B (4.85)","CACNA1G (5.23)","CUL1 (3.94)","KMT2A (1.46)","NIPBL (6.59)","DSCAM (2.66); FOXN2 (2.06); TLK2 (1.79)","SP4 (6.73)","PHF21A (3.67); RORB (1.51)","RFX3 (4.96)","RFX3 (8.72)","SHANK3 (4.41)","DLL1 (1.50); MED13L (1.93)","SATB2 (1.84)",null,"GRIN2A (4.83)","HCN4 (4.99)","GABRA1 (2.55); HCN4 (-1.89)","RORB (4.99)","ASH1L (5.39)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>GO_BP<\/th>\n      <th>synGO<\/th>\n      <th>LoF<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"autoWidth":false,"scrollY":"600px","scrollCollapse":true,"columnDefs":[{"width":"5%","targets":0},{"width":"45%","targets":1},{"width":"45%","targets":2},{"width":"5%","targets":3},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"GO_BP","targets":1},{"name":"synGO","targets":2},{"name":"LoF","targets":3}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.2 (2021-11-01)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] data.table_1.17.8 workflowr_1.7.2  
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.10       compiler_4.1.2    pillar_1.11.1     bslib_0.3.1      
+ [5] later_1.3.1       git2r_0.32.0      jquerylib_0.1.4   tools_4.1.2      
+ [9] getPass_0.2-4     digest_0.6.31     jsonlite_2.0.0    evaluate_1.0.5   
+[13] lifecycle_1.0.4   tibble_3.3.0      pkgconfig_2.0.3   rlang_1.1.1      
+[17] cli_3.6.5         rstudioapi_0.17.1 crosstalk_1.2.2   yaml_2.3.11      
+[21] xfun_0.54         fastmap_1.1.1     httr_1.4.7        stringr_1.6.0    
+[25] knitr_1.50        htmlwidgets_1.6.4 fs_1.6.2          vctrs_0.6.2      
+[29] sass_0.4.6        DT_0.34.0         rprojroot_2.1.1   glue_1.8.0       
+[33] R6_2.6.1          processx_3.8.6    otel_0.2.0        rmarkdown_2.30   
+[37] callr_3.7.6       magrittr_2.0.4    whisker_0.4.1     ps_1.9.1         
+[41] promises_1.5.0    htmltools_0.5.9   httpuv_1.6.10     stringi_1.7.12   </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
