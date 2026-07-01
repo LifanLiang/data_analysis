@@ -1,5 +1,5 @@
 ---
-title: "minnd_gene_program"
+title: "Gene program analysis for MINND"
 author: "Lifan Liang"
 date: "2026-06-27"
 output: workflowr::wflow_html
@@ -47,7 +47,7 @@ We standardize the expression of each gene before running the factor analysis. W
 
 ### Loadings associated with perturbation
 
-After standardizing the loadings for each program, we standardized again the loading for each program separately, and then regressed all the perturbation on the loadings for each program with the following formula in `lmer`:
+After obtaining the "usage" matrix from matrix factorization, we first normalized the usage across programs such that the usage for each sample sums up to one. And then we standardize the usage across samples such that it has mean=0 and std=1. Finally, we regressed all the perturbation on the loadings for each program with the following formula in `lmer`:
 
 $$
 loading \sim perturbation + donor + (1|seq\_batch) + (1|seq\_batch:culture\_batch)
@@ -58,7 +58,7 @@ The perturbation was encoded as a categorical variable with the non-targeting co
 ![](assets/perturb2program_full_heatmap.png)
 
 
-Then we applied Benjamini-Hochberg FDR control on all the P values. $\beta$ with FDR<10% was determined as statistically significant. 64 perturbations has a significant association to any gene program.
+Then we applied Benjamini-Hochberg FDR control on all the P values. $\beta$ with FDR<10% was determined as statistically significant. 79 perturbations has a significant association to at least one gene program. 118 gene programs were associated with at least one perturbation.
 
 ![](assets/perturb2program_sig_heatmap.png)
 
@@ -69,8 +69,7 @@ We applied local false sign rate (LFSR) < 5% on the factor to identify program r
 
 Overall, there are 25 factors with no significant enrichment with any terms (FDR<20%). Yet these factors were all significantly associated with at least one perturbation. 
 
-
-The table below showed the top 5 enrichment results for each database and the LoF targets associated to each factor. Numbers in the brackets for GO terms are FDR values. Numbers in the brackets for "LoF" (the associated perturbed gene) is the regression coefficients
+The table below showed the top 5 enrichment results for each database and the LoF targets associated to each factor. Numbers in the brackets for GO terms are FDR values. Numbers in the brackets for "LoF" (the associated perturbed gene) is the regression coefficients. Gene programs that are not associated with any perturbations were removed.
 
 ```{r}
 library(data.table)
