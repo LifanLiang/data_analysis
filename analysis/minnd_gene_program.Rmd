@@ -7,25 +7,42 @@ editor_options:
   chunk_output_type: console
 ---
 
+
+
 ## Introduction
 
-We obtained the pseudobulk sample that have been processed by Christina. Each sample is the sum of read count for each gene for all cells within a sequencing batch and a perturbation (including NTC). There are 107 genes targeted for Loss of function knockdown. These genes were divided into 5 gene sets. Each genes sets were perturbed and sequenced in three to four batches. After removing lowly expressed genes, we applied TMM normalization. The resulting matrix of log CPM values for 20107 genes and 402 pseudobulk samples was used for downstream analysis.
+We obtained the pseudobulk sample that have been processed by Christina. Each sample is the sum of read count for each gene for all cells within a sequencing batch and a perturbation (including NTC). There are 107 genes targeted for Loss of function knockdown. These genes were divided into 5 gene sets. Each genes sets were perturbed and sequenced in three to four batches. After removing lowly expressed genes, we applied TMM to estimate the normalization factors. 
 
+Then we estimate the mean-variance trend of the pseudobulk count matrix while controlling for the batch effects as mixed effects. The estimation error was preserved as input for the downstream factor analysis.
+
+Finally, we used `limma::removeBatchEffect` to remove batch effect while keeping the design matrix. The resulting matrix of log CPM values for 20107 genes and 402 pseudobulk samples was used for downstream analysis.
+
+The preprocessing code is shown as below:
 
 ```{r, eval=F}
 library(limma)
 library(edgeR)
+library(dream)
 
 #### Run raw count data
 load("metadata_per_celltype.Rdata")
 load("GABA_raw_counts_geneset1to5.Rdata")
 
 dge <- DGEList(counts = GABA_counts, samples = GABA_meta)
+
 # Keep lowly-expressed genes (in terms of CPM)
 keep <- filterByExpr(dge, group = GABA_meta$Loss_of_function)
 dge <- dge[keep, , keep.lib.sizes = FALSE]
 dge <- calcNormFactors(dge, method = "TMM")
-logCPM <- cpm(dge, log = TRUE, prior.count = 0.25)
+
+# Compute CPM after interpolating the mean-variance trend and 
+form <- ~ perturbation + donor + (1|seq_batch) + (1|seq_batch:culture_batch)
+vobj <- voomWithDreamWeights(dge, form, meta)
+
+# Remove batch effects as fixed effects while keeping the design matrix close the mixed effect model.
+Yc <- limma::removeBatchEffect(
+  vobj$E, batch = culture_batch, covariates = model.matrix(~ donor)[, -1],
+  design = model.matrix(~ perturbation), weights = vobj$weights)
 ```
 
 Regardless of the genes targeted, there is a nested batch structure with three layers: cell line, sequencing batch, and co-culture batch. The "batch" in the last paragraph referred to the sequencing batch. Essentially, cells within the same sequencing batch come from the same cell line. Each cell line was used in three to four sequencing batches. For each sequencing batch, there are two to four co-culture batches.
@@ -35,7 +52,8 @@ Similar to the gene program approach by Ota et al, we ran factor analysis on the
 
 ## Factor analysis
 
-We ran semi-NMF with the full matrix with the package `flashier`. More specifically, both factors (the gene side of the program) and loadings (the sample side of the program) follow the spike and slab mixture to impose sparsity. The slab for the factors is a Normal distribution. The slab for the loadings is an Exponential distribution to enforce non-negativity.
+We ran semi-NMF with the full matrix with the package `flashier`. More specifically, both factors (the gene side of the program) and loadings (the sample side of the program) follow the spike and slab mixture to impose sparsity. The slab for the factors is a Normal distribution. The slab for the loadings is an Exponential distribution to enforce non-negativity. In other words, `point_normal` was used as prior for gene-side factors and `point_exponential` was used as prior for sample-side factors.
+
 
 $$
 Y=LF^T + E
@@ -43,45 +61,144 @@ $$
 
 where $Y$ is the gene expression matrix, $L$ is the sample loading, $F$ is the factor, and $E$ is the residual.
 
-We standardize the expression of each gene before running the factor analysis. We also enforce gene-specific residual variance with the option `var_type` in `flashier`. We obtained 140 factors from the result
+We standardize the expression of each gene before running the factor analysis. We also enforce gene-specific residual variance with the option `var_type` in `flashier`. We obtained 27. factors from the result.
 
-### Loadings associated with perturbation
 
-After obtaining the "usage" matrix from matrix factorization, we first normalized the usage across programs such that the usage for each sample sums up to one. And then we standardize the usage across samples such that it has mean=0 and std=1. Finally, we regressed all the perturbation on the loadings for each program with the following formula in `lmer`:
+### Diagnosis of factor analysis results
+
+The first factor captures most variance. But this is the baseline factor, capturing the grand mean of gene expression. Its sample loading was highly concentrating on 5.8. Coefficients of variation (CV) was 0.08.
+
+![](assets/minnd_batchrm/PVE.png)
+
+After removing the first factor. PVE was more evenly distributed. 
+
+![](assets/minnd-batchrm/PVE2.png)
+
+Each factor was relatively independent of each other. Correlation heatmap of factors and loadings for NTC samples were shown below:.
+
+![gene factor correlation](assets/minnd-batchrm/gene_factor_cor.png)
+
+![sample loading correlation](assets/minnd-batchrm/sample_loading_cor.png)
+
+
+Loadings of the NTC samples were balanced across different levels of batches:
+
+![](assets/minnd-batchrm/NTC_factor_genesets.png)
+
+
+However, when we look at the loading difference between perturbation and NTC within each gene sets. There are five factors capturing the overall perturbation effect shift for each gene sets. Perhaps the MOI or treatment efficiency was different for each gene set?
+
+
+![](assets/minnd-batchrm/perturb_factor_genesets.png)
+
+
+### Associating sample loadings with perturbation
+
+After obtaining the sample loading from matrix factorization and removing the six factor pointing to technical variations, we first normalized the usage across programs such that the usage for each sample sums up to one. And then we standardize the usage across samples such that it has mean=0 and std=1. Finally, we regressed all the perturbation on the loadings for each program with the following formula in `lm`:
 
 $$
-loading \sim perturbation + donor + (1|seq\_batch) + (1|seq\_batch:culture\_batch)
+loading \sim perturbation
 $$
 
 The perturbation was encoded as a categorical variable with the non-targeting control (NTC) as the reference. Pooling all the perturbation improved the estimation of batch effects and the loadings in NTC samples. The coefficients of perturbation indicate the change of program activity caused by the perturbation. 
 
-![](assets/perturb2program_full_heatmap.png)
+Since the sample loading follows exponential distribution, nominal P values from OLS is probably not calibrated. Therefore, we permuted the samples within each culture batch 10,000 times to generate a null distribution of Z score. The Z scores of all perturbations for the same factor were pooled into one null distribution. And we compared the empirically observed Z score with the null Z score to obtain the permutaiton P values for each pair of factor and perturbation. Then we applied Benjamini-Hochberg FDR control on all the permutation P values. $\beta$ with FDR<5% was determined as statistically significant. 54 perturbations has a significant association to at least one gene program. 20 factors were associated with at least one perturbation.
 
+![](assets/minnd_batchrm/heatmap_lof2prog.png)
 
-Then we applied Benjamini-Hochberg FDR control on all the P values. $\beta$ with FDR<10% was determined as statistically significant. 79 perturbations has a significant association to at least one gene program. 118 gene programs were associated with at least one perturbation.
+Some pathway convergence or complex convergence can be observed. For example, LoF of PTEN, TSC1, NF1 converged on factor 20 and factor 6. MED23 and MED13L converged on factor 19, 27, and 10.
 
-![](assets/perturb2program_sig_heatmap.png)
 
 
 ### Enrichment analysis of the factors
 
-We applied local false sign rate (LFSR) < 5% on the factor to identify program related genes. For factors with more than 250 related genes, we selected the top 250 genes with the largest absolute Z-score (F_pm/F_psd). Then we ran enrichment analysis on the extracted gene sets with two databases: (1) GO biological process organized by MsigDB C5; (2) synGO, a database describing the function and subcellular location of synaptic proteins using Gene Ontology (GO) annotations. 16949 genes with gene symbols were used as the background gene set.
+We applied SuSIE-based enrichment analysis (`singlecelljamboreeR::perform_gsea`) to identify GO terms in biological process that can be mapped to the gene programs. The number of credible sets is ten. Any GO terms with PIP>80% is deemed significant.
 
-Overall, there are 25 factors with no significant enrichment with any terms (FDR<20%). Yet these factors were all significantly associated with at least one perturbation. 
 
-The table below showed the top 5 enrichment results for each database and the LoF targets associated to each factor. Numbers in the brackets for GO terms are FDR values. Numbers in the brackets for "LoF" (the associated perturbed gene) is the regression coefficients. Gene programs that are not associated with any perturbations were removed.
+```{r,echo=F,message=F}
+library(stringr)
+library(dplyr)
+library(tidyr)
 
-```{r}
-library(data.table)
-dat <- read.table("data/minnd_summary_table.txt",sep="\t",header=T)
+enrich.res <- readRDS("~/data_analysis/data/GO_sig_terms.RDS")
+clean.term <- function(x) {
+  temp <- x %>%
+  str_remove("GO_") %>%
+  str_replace_all("_", " ") %>%
+  str_to_sentence()
+  
+  str_c(temp, collapse="; ")  
+}
 
-DT::datatable(dat[,2:4], options=list(autoWidth=F, scrollY="600px", scrollCollapse=T,
-                                      columnDefs=list(
-  list(width="5%", targets=0),
-  list(width="45%", targets=1),
-  list(width="45%", targets=2),
-  list(width="5%", targets=3))),
+enrich1 <- sapply(enrich.res, clean.term)
+
+assoc.res <- read.csv("~/data_analysis/data/flash_batchrm_assoc_res2.csv")
+kset <- c(3,4,6,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27)
+go <- tibble(
+  factor = paste0("program", kset),
+  go_summary = enrich1[kset]   # fill in, same order
+)
+
+fmt_p <- function(p) ifelse(p <= 9.4e-7, "<1e-6", formatC(p, format = "e", digits = 1))
+
+tab <- assoc.res %>%
+  mutate(pert = sub("^Loss_of_function", "", perturbation),
+         k    = as.integer(sub("program", "", factor)),
+         cell = sprintf("%s (%+.2f, p%s)", pert, b, fmt_p(p))) %>%
+  arrange(k, desc(abs(b))) %>%
+  group_by(k, factor) %>%
+  summarise(
+    n_pert    = n(),
+    n_up      = sum(b > 0),
+    n_down    = sum(b < 0),
+    up        = paste(cell[b > 0], collapse = "; "),
+    down      = paste(cell[b < 0], collapse = "; "),
+    .groups   = "drop"
+  ) %>%
+  left_join(go, by = "factor") %>%
+  arrange(k) %>%
+  select(factor, n_pert, n_up, n_down, up, down, go_summary)
+
+library(DT)
+
+dt <- tab %>%
+  mutate(across(c(up, down), ~ ifelse(.x == "", "—", .x)),
+         go_summary = gsub(";\\s*", "; ", go_summary))
+
+datatable(
+  dt,
+  width = "100%",
+  height= 700,
+  rownames  = FALSE,
+  filter    = "top",
+  escape    = FALSE,
+  extensions = c("Buttons", "FixedHeader"),
+  colnames  = c("Program", "N", "Up", "Down", "Increased by", "Decreased by",
+                "Enriched GO terms"),
+  options = list(
+    pageLength   = 25,
+    scrollX      = TRUE,
+    fixedHeader  = TRUE,
+    dom          = "Bfrtip",
+    buttons      = c("copy", "csv", "excel"),
+    columnDefs   = list(
+      list(targets = c(1, 2, 3), className = "dt-center"),
+      list(targets = c(4, 5, 6), width = "300px")
+    )
+  ),
+  caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left; font-weight: 600;",
+    "Perturbation–program associations (global FDR < 5%), with GO enrichment summaries"
   )
+) %>%
+  formatStyle("up",    color = "#b2182b") %>%
+  formatStyle("down",  color = "#2166ac") %>%
+  formatStyle("n_up",   background = styleColorBar(c(0, max(dt$n_up)),   "#fddbc7"),
+              backgroundSize = "95% 60%", backgroundRepeat = "no-repeat",
+              backgroundPosition = "center") %>%
+  formatStyle("n_down", background = styleColorBar(c(0, max(dt$n_down)), "#d1e5f0"),
+              backgroundSize = "95% 60%", backgroundRepeat = "no-repeat",
+              backgroundPosition = "center")
 ```
 
 
