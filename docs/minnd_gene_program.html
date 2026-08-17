@@ -414,9 +414,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 2
 </p>
 <p>
 <strong>Knit directory:</strong> <code>data_analysis/</code> <span
@@ -439,18 +439,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -575,15 +578,15 @@ data/flash_batchrm_assoc_res2.csv
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistreef5102b0a1528f9d6590effe25b065df918ba5374targetblankf5102b0a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistreea6efd1db3fbe5e0345d26dd3ba83631b36a0d0c6targetblanka6efd1da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/LifanLiang/data_analysis/tree/f5102b0a1528f9d6590effe25b065df918ba5374" target="_blank">f5102b0</a>
+<a href="https://github.com/LifanLiang/data_analysis/tree/a6efd1db3fbe5e0345d26dd3ba83631b36a0d0c6" target="_blank">a6efd1d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistreef5102b0a1528f9d6590effe25b065df918ba5374targetblankf5102b0a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistreea6efd1db3fbe5e0345d26dd3ba83631b36a0d0c6targetblanka6efd1da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -593,7 +596,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/LifanLiang/data_analysis/tree/f5102b0a1528f9d6590effe25b065df918ba5374" target="_blank">f5102b0</a>.
+<a href="https://github.com/LifanLiang/data_analysis/tree/a6efd1db3fbe5e0345d26dd3ba83631b36a0d0c6" target="_blank">a6efd1d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -614,6 +617,9 @@ Ignored files:
 Untracked files:
     Untracked:  code/minnd_gene_program_analysis.R
     Untracked:  fsusie_pc_kegg_flash_batchrm.RDS
+
+Unstaged changes:
+    Modified:   analysis/minnd_gene_program.Rmd
 
 </code></pre>
 <p>
@@ -658,6 +664,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/LifanLiang/data_analysis/a6efd1db3fbe5e0345d26dd3ba83631b36a0d0c6/docs/minnd_gene_program.html" target="_blank">a6efd1d</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-08-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -829,7 +852,7 @@ load(&quot;GABA_raw_counts_geneset1to5.Rdata&quot;)
 
 dge &lt;- DGEList(counts = GABA_counts, samples = GABA_meta)
 
-# Keep lowly-expressed genes (in terms of CPM)
+# Remove lowly-expressed genes and apply TMM
 keep &lt;- filterByExpr(dge, group = GABA_meta$Loss_of_function)
 dge &lt;- dge[keep, , keep.lib.sizes = FALSE]
 dge &lt;- calcNormFactors(dge, method = &quot;TMM&quot;)
@@ -883,27 +906,27 @@ was highly concentrating on 5.8. Coefficients of variation (CV) was
 0.08.</p>
 <p><img src="assets/minnd_batchrm/PVE.png" /></p>
 <p>After removing the first factor. PVE was more evenly distributed.</p>
-<p><img src="assets/minnd-batchrm/PVE2.png" /></p>
+<p><img src="assets/minnd_batchrm/PVE2.png" /></p>
 <p>Each factor was relatively independent of each other. Correlation
 heatmap of factors and loadings for NTC samples were shown below:.</p>
 <div class="float">
-<img src="assets/minnd-batchrm/gene_factor_cor.png"
+<img src="assets/minnd_batchrm/gene_factor_cor.png"
 alt="gene factor correlation" />
 <div class="figcaption">gene factor correlation</div>
 </div>
 <div class="float">
-<img src="assets/minnd-batchrm/sample_loading_cor.png"
+<img src="assets/minnd_batchrm/sample_loading_cor.png"
 alt="sample loading correlation" />
 <div class="figcaption">sample loading correlation</div>
 </div>
 <p>Loadings of the NTC samples were balanced across different levels of
 batches:</p>
-<p><img src="assets/minnd-batchrm/NTC_factor_genesets.png" /></p>
+<p><img src="assets/minnd_batchrm/NTC_factor_genesets.png" /></p>
 <p>However, when we look at the loading difference between perturbation
 and NTC within each gene sets. There are five factors capturing the
 overall perturbation effect shift for each gene sets. Perhaps the MOI or
 treatment efficiency was different for each gene set?</p>
-<p><img src="assets/minnd-batchrm/perturb_factor_genesets.png" /></p>
+<p><img src="assets/minnd_batchrm/perturb_factor_genesets.png" /></p>
 </div>
 <div id="associating-sample-loadings-with-perturbation"
 class="section level3">

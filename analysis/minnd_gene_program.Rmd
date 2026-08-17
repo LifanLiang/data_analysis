@@ -30,7 +30,7 @@ load("GABA_raw_counts_geneset1to5.Rdata")
 
 dge <- DGEList(counts = GABA_counts, samples = GABA_meta)
 
-# Keep lowly-expressed genes (in terms of CPM)
+# Remove lowly-expressed genes and apply TMM
 keep <- filterByExpr(dge, group = GABA_meta$Loss_of_function)
 dge <- dge[keep, , keep.lib.sizes = FALSE]
 dge <- calcNormFactors(dge, method = "TMM")
@@ -72,24 +72,24 @@ The first factor captures most variance. But this is the baseline factor, captur
 
 After removing the first factor. PVE was more evenly distributed. 
 
-![](assets/minnd-batchrm/PVE2.png)
+![](assets/minnd_batchrm/PVE2.png)
 
 Each factor was relatively independent of each other. Correlation heatmap of factors and loadings for NTC samples were shown below:.
 
-![gene factor correlation](assets/minnd-batchrm/gene_factor_cor.png)
+![gene factor correlation](assets/minnd_batchrm/gene_factor_cor.png)
 
-![sample loading correlation](assets/minnd-batchrm/sample_loading_cor.png)
+![sample loading correlation](assets/minnd_batchrm/sample_loading_cor.png)
 
 
 Loadings of the NTC samples were balanced across different levels of batches:
 
-![](assets/minnd-batchrm/NTC_factor_genesets.png)
+![](assets/minnd_batchrm/NTC_factor_genesets.png)
 
 
 However, when we look at the loading difference between perturbation and NTC within each gene sets. There are five factors capturing the overall perturbation effect shift for each gene sets. Perhaps the MOI or treatment efficiency was different for each gene set?
 
 
-![](assets/minnd-batchrm/perturb_factor_genesets.png)
+![](assets/minnd_batchrm/perturb_factor_genesets.png)
 
 
 ### Associating sample loadings with perturbation
