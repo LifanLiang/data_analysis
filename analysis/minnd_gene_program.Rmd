@@ -94,17 +94,19 @@ However, when we look at the loading difference between perturbation and NTC wit
 
 ## Associating sample loadings with perturbation
 
-After obtaining the sample loading from matrix factorization and removing the six factor pointing to technical variations, we first normalized the usage across programs such that the usage for each sample sums up to one. And then we standardize the usage across samples such that it has mean=0 and std=1. Finally, we regressed all the perturbation on the loadings for each program with the following formula in `lm`:
+After obtaining the sample loading from matrix factorization and removing the six factor pointing to technical variations, we standardize the usage across samples such that it has mean=0 and std=1. Then we regressed all the perturbation on the loadings for each program with the following formula in `lm`:
 
 $$
-loading \sim perturbation
+loading \sim genesets + perturbation
 $$
+
+Since different gene sets may have different offsets for perturbation effects, we have added the gene set covariate to counter the offset so that the perturbations were compared to NTCs in the same gene set.
 
 The perturbation was encoded as a categorical variable with the non-targeting control (NTC) as the reference. Pooling all the perturbation improved the estimation of batch effects and the loadings in NTC samples. The coefficients of perturbation indicate the change of program activity caused by the perturbation. 
 
-Since the sample loading follows exponential distribution, nominal P values from OLS is probably not calibrated. Therefore, we permuted the samples within each culture batch 10,000 times to generate a null distribution of Z score. The Z scores of all perturbations for the same factor were pooled into one null distribution. And we compared the empirically observed Z score with the null Z score to obtain the permutaiton P values for each pair of factor and perturbation. Then we applied Benjamini-Hochberg FDR control on all the permutation P values. $\beta$ with FDR<5% was determined as statistically significant. 54 perturbations has a significant association to at least one gene program. 20 factors were associated with at least one perturbation.
+Since the sample loading follows exponential distribution, nominal P values from OLS is probably not calibrated. Therefore, we permuted the samples within each gene sets 50,000 times to generate a null distribution of regression coefficients. The coefficients of all perturbations for the same factor were pooled into one null distribution. And we compared the empirically observed coefficients with the null coefficients to obtain the permutaiton P values for each pair of factor and perturbation. Then we applied Benjamini-Hochberg FDR control on all the permutation P values. $\beta$ with FDR<5% was determined as statistically significant. 54 perturbations has a significant association to at least one gene program. 20 factors were associated with at least one perturbation.
 
-![](assets/minnd_batchrm/heatmap_lof2prog.png)
+![](assets/minnd_batchrm/beta_perm_heatmap.png)
 
 Some pathway convergence or complex convergence can be observed. For example, LoF of PTEN, TSC1, NF1 converged on factor 20 and factor 6. MED23 and MED13L converged on factor 19, 27, and 10.
 
