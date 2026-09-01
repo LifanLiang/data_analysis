@@ -390,7 +390,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -401,8 +401,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -415,9 +415,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>data_analysis/</code> <span
@@ -440,21 +440,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -545,15 +542,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree81a9a055f20bab902895e79d2a7b715590f24d4btargetblank81a9a05a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree841b863427e5c831e84582ca08d70febf2fb255btargetblank841b863a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/LifanLiang/data_analysis/tree/81a9a055f20bab902895e79d2a7b715590f24d4b" target="_blank">81a9a05</a>
+<a href="https://github.com/LifanLiang/data_analysis/tree/841b863427e5c831e84582ca08d70febf2fb255b" target="_blank">841b863</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree81a9a055f20bab902895e79d2a7b715590f24d4btargetblank81a9a05a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree841b863427e5c831e84582ca08d70febf2fb255btargetblank841b863a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -563,7 +560,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/LifanLiang/data_analysis/tree/81a9a055f20bab902895e79d2a7b715590f24d4b" target="_blank">81a9a05</a>.
+<a href="https://github.com/LifanLiang/data_analysis/tree/841b863427e5c831e84582ca08d70febf2fb255b" target="_blank">841b863</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -583,12 +580,7 @@ Ignored files:
 
 Untracked files:
     Untracked:  code/minnd_gene_program_analysis.R
-    Untracked:  data/batchrm_enrich_res.tsv
-    Untracked:  data/flash_batchrm_sample_nonneg_beta_perm_assoc_res2.csv
     Untracked:  fsusie_pc_kegg_flash_batchrm.RDS
-
-Unstaged changes:
-    Modified:   analysis/minnd_gene_program.Rmd
 
 </code></pre>
 <p>
@@ -633,6 +625,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/LifanLiang/data_analysis/blob/841b863427e5c831e84582ca08d70febf2fb255b/analysis/minnd_gene_program.Rmd" target="_blank">841b863</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-08-31
+</td>
+<td>
+wflow_publish(c("analysis", "docs", "data"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/LifanLiang/data_analysis/841b863427e5c831e84582ca08d70febf2fb255b/docs/minnd_gene_program.html" target="_blank">841b863</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-08-31
+</td>
+<td>
+wflow_publish(c("analysis", "docs", "data"))
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1172,7 +1198,9 @@ Var(E) = B^2 * Var(F) + Var(B)*F^2 + Var(B)Var(F)
 associations and factors.</p>
 <p>We only used the mean effect estimate to evaluate the correlation
 with MAST results Christina provided. And we only computed Pearson
-correlation with MAST DEGs (adjusted P values&lt; 0.05).</p>
+correlation with MAST DEGs (adjusted P values&lt; 0.05). The LoF targets
+with negative correlations were EPHA5, FOXP2, and PDE4D, none of which
+has any significant associations with any factors.</p>
 <p><img src="assets/pearson_MAST.png" /></p>
 <p>However, we found that MAST has a proportion of perturbations that
 results in the direct target genes with positive log fold change. Hence,
@@ -1186,7 +1214,10 @@ dream. Since dream has much fewer DEGs compared MAST, we used the
 threshold FDR&lt;20% to filter DEG and only run correlation on
 perturbations with more than 10 DEGs. The resulting correlation
 distribution was similar to that of MAST:</p>
-<p><img src="assets/pearson_dream.png.png" /></p>
+<p><img src="assets/pearson_dream.png" /></p>
+<p>This median correlation was ~0.55 with different approaches of DEG
+analysis showed that the gene-level effect has captured real signals of
+perturbation with 21 factors.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
