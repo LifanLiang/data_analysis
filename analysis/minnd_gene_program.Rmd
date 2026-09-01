@@ -92,7 +92,7 @@ However, when we look at the loading difference between perturbation and NTC wit
 ![](assets/minnd_batchrm/perturb_factor_genesets.png)
 
 
-### Associating sample loadings with perturbation
+## Associating sample loadings with perturbation
 
 After obtaining the sample loading from matrix factorization and removing the six factor pointing to technical variations, we first normalized the usage across programs such that the usage for each sample sums up to one. And then we standardize the usage across samples such that it has mean=0 and std=1. Finally, we regressed all the perturbation on the loadings for each program with the following formula in `lm`:
 
@@ -109,100 +109,181 @@ Since the sample loading follows exponential distribution, nominal P values from
 Some pathway convergence or complex convergence can be observed. For example, LoF of PTEN, TSC1, NF1 converged on factor 20 and factor 6. MED23 and MED13L converged on factor 19, 27, and 10.
 
 
+The table of associations is shown below:
 
-### Enrichment analysis of the factors
+```{r}
+library(DT); library(dplyr)
 
-We applied SuSIE-based enrichment analysis (`singlecelljamboreeR::perform_gsea`) to identify GO terms in biological process that can be mapped to the gene programs. The number of credible sets is ten. Any GO terms with PIP>80% is deemed significant.
+enr   <- read.delim("data/batchrm_enrich_res.tsv", stringsAsFactors = FALSE)
+assoc <- read.csv("data/flash_batchrm_sample_nonneg_beta_perm_assoc_res2.csv")
 
+## ---- shared: program -> short theme label -------------------------------
+themes <- tibble::tribble(
+  ~k, ~theme,
+   3, "Translation / ribosome biogenesis up; differentiation down",
+   4, "Bioenergetics & translation vs neurite development",
+   6, "Glycolysis + proteotoxic stress + p53",
+  10, "Epithelial (tight junction, keratinization) - likely artifact",
+  11, "Mitochondrial biogenesis (OXPHOS, mitoribosome, import)",
+  12, "Glutamate receptor signaling down",
+  13, "Secreted / olfactory / antimicrobial - likely low-expression noise",
+  14, "Tubulin folding down",
+  15, "Cholesterol biosynthesis down",
+  16, "Triglyceride catabolism up; adhesion down",
+  17, "Cell-cycle re-entry up; synapse assembly down",
+  18, "Glycolysis + ETC + tRNA charging up",
+  19, "Enhancer-dependent signal-responsive transcription down",
+  20, "HIF1 / glycolytic switch; cholesterol biosynthesis down",
+  22, "Interneuron differentiation & neuron remodeling up",
+  23, "RAC signaling down; remodeling up - partly non-neuronal",
+  24, "Glycolysis + S1P signaling up; adhesion down",
+  25, "Type-I interferon / MHC - likely transduction artifact",
+  26, "GABA & neuropeptide signaling down - weakly annotated",
+  27, "GABAergic transmission up; innervation & GPCR down")
 
-```{r,echo=F,message=F}
-library(stringr)
-library(dplyr)
-library(tidyr)
-
-enrich.res <- readRDS("~/data_analysis/data/GO_sig_terms.RDS")
-clean.term <- function(x) {
-  temp <- x %>%
-  str_remove("GO_") %>%
-  str_replace_all("_", " ") %>%
-  str_to_sentence()
-  
-  str_c(temp, collapse="; ")  
-}
-
-enrich1 <- sapply(enrich.res, clean.term)
-
-assoc.res <- read.csv("~/data_analysis/data/flash_batchrm_assoc_res2.csv")
-kset <- c(3,4,6,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27)
-go <- tibble(
-  factor = paste0("program", kset),
-  go_summary = enrich1[kset]   # fill in, same order
-)
-
-fmt_p <- function(p) ifelse(p <= 9.4e-7, "<1e-6", formatC(p, format = "e", digits = 1))
-
-tab <- assoc.res %>%
+## ---- Table 1: perturbation -> program associations -----------------------
+t1 <- assoc %>%
   mutate(pert = sub("^Loss_of_function", "", perturbation),
          k    = as.integer(sub("program", "", factor)),
-         cell = sprintf("%s (%+.2f, p%s)", pert, b, fmt_p(p))) %>%
-  arrange(k, desc(abs(b))) %>%
-  group_by(k, factor) %>%
-  summarise(
-    n_pert    = n(),
-    n_up      = sum(b > 0),
-    n_down    = sum(b < 0),
-    up        = paste(cell[b > 0], collapse = "; "),
-    down      = paste(cell[b < 0], collapse = "; "),
-    .groups   = "drop"
-  ) %>%
-  left_join(go, by = "factor") %>%
-  arrange(k) %>%
-  select(factor, n_pert, n_up, n_down, up, down, go_summary)
+         dir  = ifelse(b > 0, "up", "down")) %>%
+  left_join(themes, by = "k") %>%
+  arrange(q) %>%
+  select(pert, k, b, dir, z, p, q, theme)
 
-library(DT)
-
-dt <- tab %>%
-  mutate(across(c(up, down), ~ ifelse(.x == "", "—", .x)),
-         go_summary = gsub(";\\s*", "; ", go_summary))
-
-datatable(
-  dt,
-  width = "100%",
-  height= 700,
-  rownames  = FALSE,
-  filter    = "top",
-  escape    = FALSE,
+datatable(t1, rownames = FALSE, filter = "top",
   extensions = c("Buttons", "FixedHeader"),
-  colnames  = c("Program", "N", "Up", "Down", "Increased by", "Decreased by",
-                "Enriched GO terms"),
-  options = list(
-    pageLength   = 25,
-    scrollX      = TRUE,
-    fixedHeader  = TRUE,
-    dom          = "Bfrtip",
-    buttons      = c("copy", "csv", "excel"),
-    columnDefs   = list(
-      list(targets = c(1, 2, 3), className = "dt-center"),
-      list(targets = c(4, 5, 6), width = "300px")
-    )
-  ),
+  colnames = c("Perturbation", "Program", "Beta", "Dir", "Z", "P", "q", "Program theme"),
+  options = list(pageLength = 25, scrollX = TRUE, fixedHeader = TRUE,
+    dom = "Bfrtip", buttons = c("copy", "csv", "excel"),
+    order = list(list(6, "asc")),
+    columnDefs = list(list(targets = 1:6, className = "dt-center"),
+                      list(targets = 7, width = "300px"))),
   caption = htmltools::tags$caption(
     style = "caption-side: top; text-align: left; font-weight: 600;",
-    "Perturbation–program associations (global FDR < 5%), with GO enrichment summaries"
-  )
+    "Loss-of-function perturbation effects on gene programs (permutation test, BH-adjusted)")
 ) %>%
-  formatStyle("up",    color = "#b2182b") %>%
-  formatStyle("down",  color = "#2166ac") %>%
-  formatStyle("n_up",   background = styleColorBar(c(0, max(dt$n_up)),   "#fddbc7"),
-              backgroundSize = "95% 60%", backgroundRepeat = "no-repeat",
-              backgroundPosition = "center") %>%
-  formatStyle("n_down", background = styleColorBar(c(0, max(dt$n_down)), "#d1e5f0"),
-              backgroundSize = "95% 60%", backgroundRepeat = "no-repeat",
-              backgroundPosition = "center")
+  formatRound(c("b", "z"), 2) %>%
+  formatSignif(c("p", "q"), 3) %>%
+  formatStyle("b",
+    background = styleColorBar(c(-max(abs(t1$b)), max(abs(t1$b))), "#c6dbef"),
+    backgroundSize = "95% 60%", backgroundRepeat = "no-repeat",
+    backgroundPosition = "center") %>%
+  formatStyle("dir", color = styleEqual(c("up", "down"), c("#b2182b", "#2166ac")),
+              fontWeight = "bold") %>%
+  formatStyle("q", fontWeight = styleInterval(0.05, c("bold", "normal")))
+
+
 ```
 
 
 
+### Enrichment analysis of the factors
+
+We applied SuSIE-based enrichment analysis (`singlecelljamboreeR::perform_gsea`) to identify GO terms in biological process (MsigDB-C5) and pathway curation except CGP (MsigDB-C2)that can be mapped to the gene programs. The number of credible sets is ten. Any GO terms with PIP>80% is deemed significant.
+
+
+```{r,echo=F}
+## ---- Table 2: program -> enriched gene sets ------------------------------
+np <- assoc %>% mutate(k = as.integer(sub("program", "", factor))) %>%
+  count(k, name = "n_pert")
+
+t2 <- enr %>%
+  mutate(k      = as.integer(sub("program", "", factor)),
+         source = sub("_.*", "", name),
+         term   = sub("_$", "", gsub("_", " ", sub("^[A-Z]+_", "", name))),
+         dir    = ifelse(coef > 0, "up", "down")) %>%
+  semi_join(np, by = "k") %>%
+  left_join(np, by = "k") %>%
+  arrange(k, desc(pip), desc(abs(coef))) %>%
+  select(k, n_pert, CS, pip, coef, dir, genes, source, term)
+
+datatable(t2, rownames = FALSE, filter = "top",
+  extensions = c("Buttons", "FixedHeader"),
+  colnames = c("Program", "N pert", "CS", "PIP", "Coef", "Dir", "Set size",
+               "Source", "Gene set"),
+  options = list(pageLength = 25, scrollX = TRUE, fixedHeader = TRUE,
+    dom = "Bfrtip", buttons = c("copy", "csv", "excel"),
+    order = list(list(0, "asc"), list(3, "desc")),
+    columnDefs = list(list(targets = 0:6, className = "dt-center"),
+                      list(targets = 8, width = "380px"))),
+  caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left; font-weight: 600;",
+    "SuSiE gene-set enrichment for the 20 programs with \u2265 1 significant association")
+) %>%
+  formatRound("pip", 3) %>% formatRound("coef", 4) %>%
+  formatStyle("coef",
+    background = styleColorBar(c(-max(abs(t2$coef)), max(abs(t2$coef))), "#c6dbef"),
+    backgroundSize = "95% 60%", backgroundRepeat = "no-repeat",
+    backgroundPosition = "center") %>%
+  formatStyle("dir", color = styleEqual(c("up", "down"), c("#b2182b", "#2166ac")),
+              fontWeight = "bold") %>%
+  formatStyle("pip", fontWeight = styleInterval(0.95, c("normal", "bold")))
+```
+
+
+#### Lipid metabolism
+
+REACTOME_CHOLESTEROL_BIOSYNTHESIS is negative on three independent factors (15: −0.046, 20: −0.070, 21: −0.020), and mTOR pathway genes (PTEN, TSC1) load positively on two of them. 
+
+Program 15 is only enriched for REACTOME_CHOLESTEROL_BIOSYNTHESIS. Its upstream LoF targets were NF1 and PTEN.
+
+Program 20 is down-regulated cholesterol biosynthesis combined with upregulated HIF pathway activites. These two biological processes are antagonistic. In response to hypoxia, HIF shuts down energy expensive sterol synthesis and upregulating glycotic enzymes to boost anaerobic ATP production. Hence program 20 reflects the coordinated switch between cholestorel synthesis and glycosis. Its upstream LoF targets were TSC1 and PTEN.
+
+#### Mitochondria
+
+Program 11 clearly represents mitochondria activity. Mitoribosome, respiratory chain, complex assembly, and import machinery moving together is mitochondrial biogenesis, not a generic metabolic term. POGZ +3.3 is the driving perturbation — POGZ loss increases mitochondrial biogenesis. Program 21 shows the same signature (OXPHOS, CIII and CIV assembly, mito translation) coupled to cytoplasmic ribosomes and translation elongation, but with no perturbation hits, so that one is probably a metabolic-maturation state axis rather than a perturbation response.
+
+Program 4 captured a wide-spread expression pattern that were negatively associated with 7 LoF targets. The upregulated processes represent neuron differentiation. Its down-regulated processes grouped mitochondria activity (TCA cycle) with protein biosynthesis. The program probably represents the differentiation vs. growth axis. LoF of the 7 genes may make cells less mature as neurons.
+
+
+## Gene-level effects
+
+We tried to infer the perturbations' effects on transcriptome by integrating out the 21 factors in between. To avoid noise estimates with high mean and high variance of the associations, we first used `ashr` to shrink the associations from perturbations to factors, such that noisy estimates will be heavily shrunk to zero and have minimal transcriptomic effects. Considering that positive effects have larger scales than negative effects, we used `halfuniform` for modeling the mixture. The resulting local false sign rates (LFSR) is more stringent than Storey's Pi1. But these two metrics mostly agree at 5% threshold:
+
+|qvalue / LFSR | TRUE | FALSE |
+| :--- | :---: | ---: |
+| TRUE | 2207 | 2 |
+| FALSE | 8 | 30 |
+
+At 20% threshold, qvalue includes 50% more significant hits:
+
+|qvalue / LFSR | TRUE | FALSE |
+| :--- | :---: | ---: |
+| TRUE | 2166 | 0 |
+| FALSE | 27 | 54 |
+
+Below is a heatmap showing all the posterior mean of coefficients from perturbations to programs. 
+
+![](assets/beta_perm_ashr_B_pm_heatmap.png)
+
+Assuming independence between each association, we integrated out the factors to obtain the mean and variance of gene-level effects:
+
+$$
+E = B*F
+$$
+
+where $E$ is the 107x20107 matrix of gene-level effects, $B$ is the 107x21 matrix of association effects, and $F$ is the 21x20107 matrix of gene loadings. 
+
+$$
+Var(E) = B^2 * Var(F) + Var(B)*F^2 + Var(B)Var(F)
+$$
+
+Note that the estimate of variance assumes independence across every associations and factors. 
+
+We only used the mean effect estimate to evaluate the correlation with MAST results Christina provided. And we only computed Pearson correlation with MAST DEGs (adjusted P values< 0.05). The LoF targets with negative correlations were EPHA5, FOXP2, and PDE4D, none of which has any significant associations with any factors.
+
+![](assets/pearson_MAST.png)
+
+However, we found that MAST has a proportion of perturbations that results in the direct target genes with positive log fold change. Hence, we also ran pseudobulk differential analysis with dream. Turns out both approaches have very similar target gene log fold change. The four LoF targets with log fold change > 0.5 in dream is **SP4, PHF21A, CHD2, and MEF2C**.
+
+![](assets/mast_vs_dream.png)
+
+
+We also compared Pearson correlation with the log fold change from dream. Since dream has much fewer DEGs compared MAST, we used the threshold FDR<20% to filter DEG and only run correlation on perturbations with more than 10 DEGs. The resulting correlation distribution was similar to that of MAST:
+
+![](assets/pearson_dream.png)
+
+This median correlation was ~0.55 with different approaches of DEG analysis showed that the gene-level effect has captured real signals of perturbation with 21 factors.
 
 
 
