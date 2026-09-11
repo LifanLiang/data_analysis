@@ -64,6 +64,19 @@ where $Y$ is the gene expression matrix, $L$ is the sample loading, $F$ is the f
 We standardize the expression of each gene before running the factor analysis. We also enforce gene-specific residual variance with the option `var_type` in `flashier`. We obtained 27. factors from the result.
 
 
+### Subsampling genes to evaluate the stability of factors
+
+To verify that each factor captures a reproducible co-expression pattern, we subsampled 80% of genes and rerun `flashier` with the same parameters. Repeat this 100 times. First of all, the number of factors `flashier` decided on is centered around 27, which is the number of factors in our actual run.
+
+![](assets/flash_subsample_Nfactor.png)
+
+In addition, we subsampled 80% of genes and then permuted the genes for each sample so that the coexpression structure was removed. Then we applied `flashier` to the permuted dataset with the same configuration. This procedure was also repeated 100 times. `flashier` returned only one factor for every run.
+
+We used two metrics to evaluate the recoverability of each factor in our actual run: (1) maximum correlation across all factors in the subsampled run, measuring one-on-one matching relationships; (2) extract orthonormal basis from QR decomposition of subsampled factors and compute the sum of $R^2$, measuring the variance of the reference factor being captured by all the subsampled factors. Comparison of the two metrics against subsampled real data and the sum of $R^2$ for the permuted data was shown below. Clearly, every factor were reproducible in the subsampled real data in contrast to the permuted data. In particular, program 1 to 21 can find one-to-one match in most subsampled runs, while program 22-27 may be split into multiple factors.
+
+![](assets/factor_stability_3x9.png)
+
+
 ### Diagnosis of factor analysis results
 
 The first factor captures most variance. But this is the baseline factor, capturing the grand mean of gene expression. Its sample loading was highly concentrating on 5.8. Coefficients of variation (CV) was 0.08.
@@ -106,14 +119,14 @@ The perturbation was encoded as a categorical variable with the non-targeting co
 
 Since the sample loading follows exponential distribution, nominal P values from OLS is probably not calibrated. Therefore, we permuted the samples within each gene sets 50,000 times to generate a null distribution of regression coefficients. The coefficients of all perturbations for the same factor were pooled into one null distribution. And we compared the empirically observed coefficients with the null coefficients to obtain the permutaiton P values for each pair of factor and perturbation. Then we applied Benjamini-Hochberg FDR control on all the permutation P values. $\beta$ with FDR<5% was determined as statistically significant. 54 perturbations has a significant association to at least one gene program. 20 factors were associated with at least one perturbation.
 
-![](assets/minnd_batchrm/beta_perm_heatmap.png)
+![](assets/beta_perm_heatmap.png)
 
 Some pathway convergence or complex convergence can be observed. For example, LoF of PTEN, TSC1, NF1 converged on factor 20 and factor 6. MED23 and MED13L converged on factor 19, 27, and 10.
 
 
 The table of associations is shown below:
 
-```{r}
+```{r,echo=F,message=F}
 library(DT); library(dplyr)
 
 enr   <- read.delim("data/batchrm_enrich_res.tsv", stringsAsFactors = FALSE)
@@ -238,7 +251,12 @@ Program 11 clearly represents mitochondria activity. Mitoribosome, respiratory c
 Program 4 captured a wide-spread expression pattern that were negatively associated with 7 LoF targets. The upregulated processes represent neuron differentiation. Its down-regulated processes grouped mitochondria activity (TCA cycle) with protein biosynthesis. The program probably represents the differentiation vs. growth axis. LoF of the 7 genes may make cells less mature as neurons.
 
 
-## Gene-level effects
+## Transcription factor binding site enrichment
+
+We used the transcription factor targets (TFT) gene sets from MsigDB-C3 to run SuSIE-based enrichment analysis 
+
+
+## Gene-level effects by integrating out gene loadings
 
 We tried to infer the perturbations' effects on transcriptome by integrating out the 21 factors in between. To avoid noise estimates with high mean and high variance of the associations, we first used `ashr` to shrink the associations from perturbations to factors, such that noisy estimates will be heavily shrunk to zero and have minimal transcriptomic effects. Considering that positive effects have larger scales than negative effects, we used `halfuniform` for modeling the mixture. The resulting local false sign rates (LFSR) is more stringent than Storey's Pi1. But these two metrics mostly agree at 5% threshold:
 

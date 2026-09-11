@@ -390,7 +390,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -401,8 +401,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -411,13 +411,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-08-31
+<strong>Last updated:</strong> 2026-09-11
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>data_analysis/</code> <span
@@ -440,18 +440,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -542,15 +545,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree25f1954b59c7ba9872404037f2c892d0a629c14dtargetblank25f1954a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistreec2da04b4e1636b0c95b669a0afc13ec86e2cb0f6targetblankc2da04ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/LifanLiang/data_analysis/tree/25f1954b59c7ba9872404037f2c892d0a629c14d" target="_blank">25f1954</a>
+<a href="https://github.com/LifanLiang/data_analysis/tree/c2da04b4e1636b0c95b669a0afc13ec86e2cb0f6" target="_blank">c2da04b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree25f1954b59c7ba9872404037f2c892d0a629c14dtargetblank25f1954a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistreec2da04b4e1636b0c95b669a0afc13ec86e2cb0f6targetblankc2da04ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -560,7 +563,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/LifanLiang/data_analysis/tree/25f1954b59c7ba9872404037f2c892d0a629c14d" target="_blank">25f1954</a>.
+<a href="https://github.com/LifanLiang/data_analysis/tree/c2da04b4e1636b0c95b669a0afc13ec86e2cb0f6" target="_blank">c2da04b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -580,7 +583,11 @@ Ignored files:
 
 Untracked files:
     Untracked:  code/minnd_gene_program_analysis.R
+    Untracked:  data/batchrm_enrich_tf_res.tsv
     Untracked:  fsusie_pc_kegg_flash_batchrm.RDS
+
+Unstaged changes:
+    Modified:   analysis/minnd_gene_program.Rmd
 
 </code></pre>
 <p>
@@ -625,6 +632,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/LifanLiang/data_analysis/c2da04b4e1636b0c95b669a0afc13ec86e2cb0f6/docs/minnd_gene_program.html" target="_blank">c2da04b</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-08-31
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -978,6 +1002,35 @@ class="math inline">\(E\)</span> is the residual.</p>
 analysis. We also enforce gene-specific residual variance with the
 option <code>var_type</code> in <code>flashier</code>. We obtained 27.
 factors from the result.</p>
+<div id="subsampling-genes-to-evaluate-the-stability-of-factors"
+class="section level3">
+<h3>Subsampling genes to evaluate the stability of factors</h3>
+<p>To verify that each factor captures a reproducible co-expression
+pattern, we subsampled 80% of genes and rerun <code>flashier</code> with
+the same parameters. Repeat this 100 times. First of all, the number of
+factors <code>flashier</code> decided on is centered around 27, which is
+the number of factors in our actual run.</p>
+<p><img src="assets/flash_subsample_Nfactor.png" /></p>
+<p>In addition, we subsampled 80% of genes and then permuted the genes
+for each sample so that the coexpression structure was removed. Then we
+applied <code>flashier</code> to the permuted dataset with the same
+configuration. This procedure was also repeated 100 times.
+<code>flashier</code> returned only one factor for every run.</p>
+<p>We used two metrics to evaluate the recoverability of each factor in
+our actual run: (1) maximum correlation across all factors in the
+subsampled run, measuring one-on-one matching relationships; (2) extract
+orthonormal basis from QR decomposition of subsampled factors and
+compute the sum of <span class="math inline">\(R^2\)</span>, measuring
+the variance of the reference factor being captured by all the
+subsampled factors. Comparison of the two metrics against subsampled
+real data and the sum of <span class="math inline">\(R^2\)</span> for
+the permuted data was shown below. Clearly, every factor were
+reproducible in the subsampled real data in contrast to the permuted
+data. In particular, program 1 to 21 can find one-to-one match in most
+subsampled runs, while program 22-27 may be split into multiple
+factors.</p>
+<p><img src="assets/factor_stability_3x9.png" /></p>
+</div>
 <div id="diagnosis-of-factor-analysis-results" class="section level3">
 <h3>Diagnosis of factor analysis results</h3>
 <p>The first factor captures most variance. But this is the baseline
@@ -1041,77 +1094,11 @@ class="math inline">\(\beta\)</span> with FDR&lt;5% was determined as
 statistically significant. 54 perturbations has a significant
 association to at least one gene program. 20 factors were associated
 with at least one perturbation.</p>
-<p><img src="assets/minnd_batchrm/beta_perm_heatmap.png" /></p>
+<p><img src="assets/beta_perm_heatmap.png" /></p>
 <p>Some pathway convergence or complex convergence can be observed. For
 example, LoF of PTEN, TSC1, NF1 converged on factor 20 and factor 6.
 MED23 and MED13L converged on factor 19, 27, and 10.</p>
 <p>The table of associations is shown below:</p>
-<pre class="r"><code>library(DT); library(dplyr)</code></pre>
-<pre><code>
-Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:stats&#39;:
-
-    filter, lag</code></pre>
-<pre><code>The following objects are masked from &#39;package:base&#39;:
-
-    intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>enr   &lt;- read.delim(&quot;data/batchrm_enrich_res.tsv&quot;, stringsAsFactors = FALSE)
-assoc &lt;- read.csv(&quot;data/flash_batchrm_sample_nonneg_beta_perm_assoc_res2.csv&quot;)
-
-## ---- shared: program -&gt; short theme label -------------------------------
-themes &lt;- tibble::tribble(
-  ~k, ~theme,
-   3, &quot;Translation / ribosome biogenesis up; differentiation down&quot;,
-   4, &quot;Bioenergetics &amp; translation vs neurite development&quot;,
-   6, &quot;Glycolysis + proteotoxic stress + p53&quot;,
-  10, &quot;Epithelial (tight junction, keratinization) - likely artifact&quot;,
-  11, &quot;Mitochondrial biogenesis (OXPHOS, mitoribosome, import)&quot;,
-  12, &quot;Glutamate receptor signaling down&quot;,
-  13, &quot;Secreted / olfactory / antimicrobial - likely low-expression noise&quot;,
-  14, &quot;Tubulin folding down&quot;,
-  15, &quot;Cholesterol biosynthesis down&quot;,
-  16, &quot;Triglyceride catabolism up; adhesion down&quot;,
-  17, &quot;Cell-cycle re-entry up; synapse assembly down&quot;,
-  18, &quot;Glycolysis + ETC + tRNA charging up&quot;,
-  19, &quot;Enhancer-dependent signal-responsive transcription down&quot;,
-  20, &quot;HIF1 / glycolytic switch; cholesterol biosynthesis down&quot;,
-  22, &quot;Interneuron differentiation &amp; neuron remodeling up&quot;,
-  23, &quot;RAC signaling down; remodeling up - partly non-neuronal&quot;,
-  24, &quot;Glycolysis + S1P signaling up; adhesion down&quot;,
-  25, &quot;Type-I interferon / MHC - likely transduction artifact&quot;,
-  26, &quot;GABA &amp; neuropeptide signaling down - weakly annotated&quot;,
-  27, &quot;GABAergic transmission up; innervation &amp; GPCR down&quot;)
-
-## ---- Table 1: perturbation -&gt; program associations -----------------------
-t1 &lt;- assoc %&gt;%
-  mutate(pert = sub(&quot;^Loss_of_function&quot;, &quot;&quot;, perturbation),
-         k    = as.integer(sub(&quot;program&quot;, &quot;&quot;, factor)),
-         dir  = ifelse(b &gt; 0, &quot;up&quot;, &quot;down&quot;)) %&gt;%
-  left_join(themes, by = &quot;k&quot;) %&gt;%
-  arrange(q) %&gt;%
-  select(pert, k, b, dir, z, p, q, theme)
-
-datatable(t1, rownames = FALSE, filter = &quot;top&quot;,
-  extensions = c(&quot;Buttons&quot;, &quot;FixedHeader&quot;),
-  colnames = c(&quot;Perturbation&quot;, &quot;Program&quot;, &quot;Beta&quot;, &quot;Dir&quot;, &quot;Z&quot;, &quot;P&quot;, &quot;q&quot;, &quot;Program theme&quot;),
-  options = list(pageLength = 25, scrollX = TRUE, fixedHeader = TRUE,
-    dom = &quot;Bfrtip&quot;, buttons = c(&quot;copy&quot;, &quot;csv&quot;, &quot;excel&quot;),
-    order = list(list(6, &quot;asc&quot;)),
-    columnDefs = list(list(targets = 1:6, className = &quot;dt-center&quot;),
-                      list(targets = 7, width = &quot;300px&quot;))),
-  caption = htmltools::tags$caption(
-    style = &quot;caption-side: top; text-align: left; font-weight: 600;&quot;,
-    &quot;Loss-of-function perturbation effects on gene programs (permutation test, BH-adjusted)&quot;)
-) %&gt;%
-  formatRound(c(&quot;b&quot;, &quot;z&quot;), 2) %&gt;%
-  formatSignif(c(&quot;p&quot;, &quot;q&quot;), 3) %&gt;%
-  formatStyle(&quot;b&quot;,
-    background = styleColorBar(c(-max(abs(t1$b)), max(abs(t1$b))), &quot;#c6dbef&quot;),
-    backgroundSize = &quot;95% 60%&quot;, backgroundRepeat = &quot;no-repeat&quot;,
-    backgroundPosition = &quot;center&quot;) %&gt;%
-  formatStyle(&quot;dir&quot;, color = styleEqual(c(&quot;up&quot;, &quot;down&quot;), c(&quot;#b2182b&quot;, &quot;#2166ac&quot;)),
-              fontWeight = &quot;bold&quot;) %&gt;%
-  formatStyle(&quot;q&quot;, fontWeight = styleInterval(0.05, c(&quot;bold&quot;, &quot;normal&quot;)))</code></pre>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-fb09ae03293b22c7623d" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-fb09ae03293b22c7623d">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"3\" data-max=\"27\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"-2.26253221868028\" data-max=\"6.83081896070374\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"2.76423500215912\" data-max=\"6.72836434370297\" data-scale=\"14\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"3.73831705e-07\" data-max=\"0.006984484675798\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.00083999984299\" data-max=\"0.193754778598968\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons","FixedHeader"],"caption":"<caption style=\"caption-side: top; text-align: left; font-weight: 600;\">Loss-of-function perturbation effects on gene programs (permutation test, BH-adjusted)<\/caption>","data":[["PTEN","PTEN","MED13","PHF21A","NF1","POGZ","NF1","TLK2","KDM6B","SP4","TLK2","RFX3","TSC1","RB1CC1","NF1","DDX3X","KDM6B","NF1","POGZ","DDX3X","MED13","POGZ","POGZ","MED13","DNMT3A","CEP128","DDX3X","NEDD4","CHD2","SNAP25","MED23","ASH1L","CUL3","POGZ","PHF21A","MED23","AUTS2","RB1CC1","KDM5B","KMT2A","NF1","MED13L","DNMT3A","TSC1","TLK2","NAA15","POGZ","SNAP25","TLK2","ASH1L","DLL1","EBF3","NIPBL","DYRK1A","PTEN","RFX3","TCF4","TSC1","SCN2A","SNAP25","MED13L","TSC1","MED13","DYNC1H1","AFF3","SLC22A11","TAOK1","MED23","TSC1","KMT2A","PHF21A","GRIA3","TAOK1","SP4","TCF7L2","SATB2","TSC1","NF1","XPO7","DLL1","MED23"],[20,6,19,17,23,16,25,19,27,24,25,27,20,22,6,19,19,15,19,10,13,11,13,10,22,24,25,18,12,11,27,6,13,3,13,19,16,17,25,4,4,27,13,13,22,3,10,10,24,26,26,4,4,10,15,22,25,27,23,23,19,3,27,4,13,13,13,10,17,20,4,13,18,20,13,4,6,14,25,24,24],[4.60348579115311,4.62485442690545,3.56488151671633,6.83081896070374,3.65142439452988,4.99699433796145,3.48469043811608,3.64596276473002,3.06679251524705,3.72223594782904,3.37622138540045,4.27857717869165,5.26906021021684,3.58701739528432,3.61218084067266,3.42658495746466,1.94273236828989,4.32673280423907,2.88573154245041,4.07907743767604,-2.26253221868028,3.27348194554563,-2.18735804901568,3.92899531190644,2.06120896873823,2.70061724368552,2.60899321661861,2.53084239139073,2.11516875146917,2.33926582284814,3.58069236196855,1.92186087249001,-1.9645196111375,3.99701760881611,-1.93571473067254,3.00790035424579,2.18381657783976,2.38074995762136,2.18845982277644,-1.41110949892975,-1.41158576361244,1.80963813018525,-1.85438831329654,-1.99418839794981,2.40755204804848,4.39371491694263,3.20271052330369,1.96701369418356,2.3496197125698,-1.45335556270025,-1.45009760355697,-1.27279790154867,-1.41162515138613,1.47799818865088,1.73191247400746,2.23224376251277,1.81785260855873,1.82268148326098,1.92696772240818,1.95635133348534,2.00713117341689,1.63197581282442,1.53431635812294,-1.36286204692365,-1.79456603697082,-1.78005927983658,-1.63821340429664,1.54184074780053,0.92904418967817,1.51039357491272,-1.19028772309426,-2.08642930678642,1.97110060085813,1.50812885753925,-1.56438976752382,-1.16446460288746,1.47100186207957,2.31318802733932,0.992477270077519,2.12464015846963,2.22222194860397],["up","up","up","up","up","up","up","up","up","up","up","up","up","up","up","up","up","up","up","up","down","up","down","up","up","up","up","up","up","up","up","up","down","up","down","up","up","up","up","down","down","up","down","down","up","up","up","up","up","down","down","down","down","up","up","up","up","up","up","up","up","up","up","down","down","down","down","up","up","up","down","down","up","up","down","down","up","up","up","up","up"],[6.30763619952091,6.01711164069108,5.18034454252081,6.72836434370297,5.09724501623806,5.54037868083365,4.65815044248615,4.8044521861747,5.16307985452072,5.19732540325657,4.52346019613399,5.03699460560402,5.2771559184896,4.7563101114069,4.90610396372456,4.43330072069593,4.42433139589245,5.14842057026805,4.20211156391027,4.81838301131114,4.05039086535747,4.43038241126113,3.88868776363908,4.56731424857487,4.03795620430358,4.29070649380423,3.78938936955768,3.84137249785343,3.54191298019401,4.05898012007879,3.79409166535268,3.838841866253,3.56652957295042,3.89543930386492,3.53003731806514,3.5773246373884,3.65187741558882,3.92867305657587,3.38464281949744,3.49149390659108,3.48675974830609,3.48535318070789,3.3081023055317,3.27773561323705,3.43812361356038,3.29399198471192,3.70012617596937,3.69766774939418,3.46074759299609,3.06112113637488,3.06508304084389,3.14635769861708,3.14085041639225,3.59995480061633,3.49940781026005,3.20508969843866,3.02726377779318,3.13285738743719,3.05225529146238,3.03218677803949,2.99627256792471,3.15811473986637,3.05130569873816,3.033253226053,2.93021317194122,2.92939667438102,2.93518735046521,3.40529612945553,3.15154229331132,3.06442333323221,2.94667741789475,2.86554948836992,2.89890041405884,3.01748651052082,2.82908212098335,2.88394160548602,2.90675019338914,3.32090958340534,2.76423500215912,2.97896201671271,2.97764697623638],[3.73831705825849e-07,1.30841097039047e-06,1.4953268233034e-06,2.80373779369387e-06,3.55140120534557e-06,5.79439144030067e-06,7.47663411651699e-06,8.78504508690746e-06,1.02803719102109e-05,1.15887828806013e-05,1.43925206742952e-05,1.4766352380121e-05,2.20560706437251e-05,2.29906499082897e-05,3.43925169359781e-05,3.38317693772394e-05,3.53270962005428e-05,5.98130729321359e-05,8.33644703991644e-05,0.000128224275098266,0.00012523362145166,0.000184859778530883,0.000215140146702776,0.00027607471475239,0.000282990601310168,0.000275327051340738,0.000279252284251909,0.000382056003354018,0.000453457859166755,0.000538504572242136,0.000551027934387302,0.000631962498698598,0.000616822314612652,0.000691588655777821,0.000699439121600164,0.000706355008157942,0.000739065282417704,0.0008229905003756069,0.00104261662754829,0.0013044857374793,0.00132224274350603,0.00128897172168753,0.00139457917858333,0.00153551373167968,0.00170467257856587,0.0027448593000263,0.00260074717743043,0.00261495278225182,0.00248971916080016,0.00273364434885152,0.00270037332703302,0.00328242929300387,0.00332261620138015,0.00322560687371834,0.00335999937196273,0.00314953212158278,0.00304747606589232,0.00322018631398387,0.00343457879727499,0.00363364418062726,0.00375065350455075,0.0038743917991791,0.00394822356107971,0.00432523283640508,0.00438355058251391,0.00439270945930664,0.00432224218275847,0.00480560657839129,0.00489719534631863,0.00499439158983335,0.00532112050072514,0.00528635415208334,0.00547140084646713,0.00554485877666191,0.0058642979692901,0.00620485865329745,0.00626298948355337,0.00636485862339091,0.00638579319891716,0.00696897066000548,0.00698448467579726],[0.000839999842990684,0.00111999979065424,0.00111999979065424,0.00157499970560753,0.0015959997016823,0.0021699995943926,0.00239999955140195,0.00246749953878513,0.00256666618691598,0.00260399951327112,0.00276499948317767,0.00276499948317767,0.0036899993102805,0.0036899993102805,0.0046694108919188,0.0046694108919188,0.0046694108919188,0.0074666652710283,0.009858945525627501,0.0137199974355145,0.0137199974355145,0.0188809055617679,0.0210182569409191,0.0235511067090351,0.0235511067090351,0.0235511067090351,0.0235511067090351,0.0306599942691599,0.0351351658464724,0.0399406376957506,0.0399406376957506,0.04303090104775,0.04303090104775,0.0440883250925249,0.0440883250925249,0.0440883250925249,0.0448832348538536,0.0486647277458945,0.0600707580025902,0.07073998677757259,0.07073998677757259,0.07073998677757259,0.0728748700994592,0.07841589443373261,0.0851199840897226,0.120935271512923,0.120935271512923,0.120935271512923,0.120935271512923,0.120935271512923,0.120935271512923,0.130171010151729,0.130171010151729,0.130171010151729,0.130171010151729,0.130171010151729,0.130171010151729,0.130171010151729,0.130805060296219,0.136079974564491,0.138159318438123,0.140415457625088,0.14081997367851,0.14731967395615,0.14731967395615,0.14731967395615,0.14731967395615,0.158797029141842,0.15947823106055,0.16031997003365,0.166063302293464,0.166063302293464,0.168368887448099,0.168368887448099,0.175694367159931,0.181631358455277,0.181631358455277,0.181631358455277,0.181631358455277,0.193754778598968,0.193754778598968],["HIF1 / glycolytic switch; cholesterol biosynthesis down","Glycolysis + proteotoxic stress + p53","Enhancer-dependent signal-responsive transcription down","Cell-cycle re-entry up; synapse assembly down","RAC signaling down; remodeling up - partly non-neuronal","Triglyceride catabolism up; adhesion down","Type-I interferon / MHC - likely transduction artifact","Enhancer-dependent signal-responsive transcription down","GABAergic transmission up; innervation &amp; GPCR down","Glycolysis + S1P signaling up; adhesion down","Type-I interferon / MHC - likely transduction artifact","GABAergic transmission up; innervation &amp; GPCR down","HIF1 / glycolytic switch; cholesterol biosynthesis down","Interneuron differentiation &amp; neuron remodeling up","Glycolysis + proteotoxic stress + p53","Enhancer-dependent signal-responsive transcription down","Enhancer-dependent signal-responsive transcription down","Cholesterol biosynthesis down","Enhancer-dependent signal-responsive transcription down","Epithelial (tight junction, keratinization) - likely artifact","Secreted / olfactory / antimicrobial - likely low-expression noise","Mitochondrial biogenesis (OXPHOS, mitoribosome, import)","Secreted / olfactory / antimicrobial - likely low-expression noise","Epithelial (tight junction, keratinization) - likely artifact","Interneuron differentiation &amp; neuron remodeling up","Glycolysis + S1P signaling up; adhesion down","Type-I interferon / MHC - likely transduction artifact","Glycolysis + ETC + tRNA charging up","Glutamate receptor signaling down","Mitochondrial biogenesis (OXPHOS, mitoribosome, import)","GABAergic transmission up; innervation &amp; GPCR down","Glycolysis + proteotoxic stress + p53","Secreted / olfactory / antimicrobial - likely low-expression noise","Translation / ribosome biogenesis up; differentiation down","Secreted / olfactory / antimicrobial - likely low-expression noise","Enhancer-dependent signal-responsive transcription down","Triglyceride catabolism up; adhesion down","Cell-cycle re-entry up; synapse assembly down","Type-I interferon / MHC - likely transduction artifact","Bioenergetics &amp; translation vs neurite development","Bioenergetics &amp; translation vs neurite development","GABAergic transmission up; innervation &amp; GPCR down","Secreted / olfactory / antimicrobial - likely low-expression noise","Secreted / olfactory / antimicrobial - likely low-expression noise","Interneuron differentiation &amp; neuron remodeling up","Translation / ribosome biogenesis up; differentiation down","Epithelial (tight junction, keratinization) - likely artifact","Epithelial (tight junction, keratinization) - likely artifact","Glycolysis + S1P signaling up; adhesion down","GABA &amp; neuropeptide signaling down - weakly annotated","GABA &amp; neuropeptide signaling down - weakly annotated","Bioenergetics &amp; translation vs neurite development","Bioenergetics &amp; translation vs neurite development","Epithelial (tight junction, keratinization) - likely artifact","Cholesterol biosynthesis down","Interneuron differentiation &amp; neuron remodeling up","Type-I interferon / MHC - likely transduction artifact","GABAergic transmission up; innervation &amp; GPCR down","RAC signaling down; remodeling up - partly non-neuronal","RAC signaling down; remodeling up - partly non-neuronal","Enhancer-dependent signal-responsive transcription down","Translation / ribosome biogenesis up; differentiation down","GABAergic transmission up; innervation &amp; GPCR down","Bioenergetics &amp; translation vs neurite development","Secreted / olfactory / antimicrobial - likely low-expression noise","Secreted / olfactory / antimicrobial - likely low-expression noise","Secreted / olfactory / antimicrobial - likely low-expression noise","Epithelial (tight junction, keratinization) - likely artifact","Cell-cycle re-entry up; synapse assembly down","HIF1 / glycolytic switch; cholesterol biosynthesis down","Bioenergetics &amp; translation vs neurite development","Secreted / olfactory / antimicrobial - likely low-expression noise","Glycolysis + ETC + tRNA charging up","HIF1 / glycolytic switch; cholesterol biosynthesis down","Secreted / olfactory / antimicrobial - likely low-expression noise","Bioenergetics &amp; translation vs neurite development","Glycolysis + proteotoxic stress + p53","Tubulin folding down","Type-I interferon / MHC - likely transduction artifact","Glycolysis + S1P signaling up; adhesion down","Glycolysis + S1P signaling up; adhesion down"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Perturbation<\/th>\n      <th>Program<\/th>\n      <th>Beta<\/th>\n      <th>Dir<\/th>\n      <th>Z<\/th>\n      <th>P<\/th>\n      <th>q<\/th>\n      <th>Program theme<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":25,"scrollX":true,"fixedHeader":true,"dom":"Bfrtip","buttons":["copy","csv","excel"],"order":[[6,"asc"]],"columnDefs":[{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatSignif(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatSignif(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\", null);\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 2, 3, \",\", \".\", null);\n  }"},{"targets":[1,2,3,4,5,6],"className":"dt-center"},{"targets":7,"width":"300px"},{"name":"pert","targets":0},{"name":"k","targets":1},{"name":"b","targets":2},{"name":"dir","targets":3},{"name":"z","targets":4},{"name":"p","targets":5},{"name":"q","targets":6},{"name":"theme","targets":7}],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background':isNaN(parseFloat(value)) || value <= -6.830819 ? '' : 'linear-gradient(90.000000deg, transparent ' + Math.max(6.830819 - value, 0)/13.661638 * 100 + '%, #c6dbef ' + Math.max(6.830819 - value, 0)/13.661638 * 100 + '%)','background-size':'95% 60%','background-repeat':'no-repeat','background-position':'center'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-weight':'bold','color':value == \"up\" ? \"#b2182b\" : value == \"down\" ? \"#2166ac\" : null});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-weight':isNaN(parseFloat(value)) ? '' : value <= 0.05 ? \"bold\" : \"normal\"});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.rowCallback"],"jsHooks":[]}</script>
 <div id="enrichment-analysis-of-the-factors" class="section level3">
@@ -1159,8 +1146,15 @@ genes may make cells less mature as neurons.</p>
 </div>
 </div>
 </div>
-<div id="gene-level-effects" class="section level2">
-<h2>Gene-level effects</h2>
+<div id="transcription-factor-binding-site-enrichment"
+class="section level2">
+<h2>Transcription factor binding site enrichment</h2>
+<p>We used the transcription factor targets (TFT) gene sets from
+MsigDB-C3 to run SuSIE-based enrichment analysis</p>
+</div>
+<div id="gene-level-effects-by-integrating-out-gene-loadings"
+class="section level2">
+<h2>Gene-level effects by integrating out gene loadings</h2>
 <p>We tried to infer the perturbations’ effects on transcriptome by
 integrating out the 21 factors in between. To avoid noise estimates with
 high mean and high variance of the associations, we first used
