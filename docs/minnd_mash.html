@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree0f83588e4b5f16cb2ca40a2a1cc5d35349a07816targetblank0f83588a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree8849bb3dbb7a2f5af4ca0ad4aceac56e5635e4fftargetblank8849bb3a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/LifanLiang/data_analysis/tree/0f83588e4b5f16cb2ca40a2a1cc5d35349a07816" target="_blank">0f83588</a>
+<a href="https://github.com/LifanLiang/data_analysis/tree/8849bb3dbb7a2f5af4ca0ad4aceac56e5635e4ff" target="_blank">8849bb3</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree0f83588e4b5f16cb2ca40a2a1cc5d35349a07816targetblank0f83588a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree8849bb3dbb7a2f5af4ca0ad4aceac56e5635e4fftargetblank8849bb3a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/LifanLiang/data_analysis/tree/0f83588e4b5f16cb2ca40a2a1cc5d35349a07816" target="_blank">0f83588</a>.
+<a href="https://github.com/LifanLiang/data_analysis/tree/8849bb3dbb7a2f5af4ca0ad4aceac56e5635e4ff" target="_blank">8849bb3</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -604,6 +604,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/LifanLiang/data_analysis/blob/8849bb3dbb7a2f5af4ca0ad4aceac56e5635e4ff/analysis/minnd_mash.Rmd" target="_blank">8849bb3</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-10-13
+</td>
+<td>
+wflow_publish(c("analysis", "data", "docs"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/LifanLiang/data_analysis/887eb31779cf215f95e3da32212f1542db6fb6aa/docs/minnd_mash.html" target="_blank">887eb31</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-10-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -792,10 +826,54 @@ basically removed due to zero priors.</p>
 <pre class="r"><code>pi &lt;- readRDS(&quot;data/minnd_mash_GABA_pi.RDS&quot;)
 barplot(head(sort(pi,decreasing = T),20),las=2)</code></pre>
 <p><img src="figure/minnd_mash.Rmd/unnamed-chunk-1-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/LifanLiang/data_analysis/blob/887eb31779cf215f95e3da32212f1542db6fb6aa/docs/figure/minnd_mash.Rmd/unnamed-chunk-1-1.png" target="_blank">887eb31</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-10-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The top covariance pattern is <code>ED_tFLASH</code>, which summarize
 all the patterns. Below is the correlation matrix of `ED_tFLASH</p>
-<p><img src="assets/minnd_mash_gaba_tflash_cor.png" /> The number of
-DEGs has increased a lot after running MASH:</p>
+<p><img src="assets/minnd_mash_gaba_tflash_cor.png" /></p>
+<p>The overall sharing of DEGs across perturbation is shown below. The
+default definition of shared is “the same sign and within a factor 0.5
+of each other”.</p>
+<p><img src="assets/minnd_mash_gaba_pairwise_sharing.png" /></p>
+<p>Alternatively, we can define shared as the same sign and significant
+in one condition:</p>
+<p><img src="assets/minnd_mash_gaba_pairwise_sharing_sign.png" /></p>
+<p>The number of DEGs has increased a lot after running MASH:</p>
 <p><img src="assets/mash_deg_count.png" /></p>
 <br>
 <p>
