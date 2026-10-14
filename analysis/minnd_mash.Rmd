@@ -111,6 +111,16 @@ barplot(head(sort(pi,decreasing = T),20),las=2)
 The top covariance pattern is `ED_tFLASH`, which summarize all the patterns. Below is the correlation matrix of `ED_tFLASH
 
 ![](assets/minnd_mash_gaba_tflash_cor.png)
+
+The overall sharing of DEGs across perturbation is shown below. The default definition of shared is “the same sign and within a factor 0.5 of each other”.
+
+![](assets/minnd_mash_gaba_pairwise_sharing.png)
+
+Alternatively, we can define shared as the same sign and significant in one condition:
+
+![](assets/minnd_mash_gaba_pairwise_sharing_sign.png)
+
+
 The number of DEGs has increased a lot after running MASH:
 
 ![](assets/mash_deg_count.png)
