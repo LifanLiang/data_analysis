@@ -11,7 +11,9 @@ editor_options:
 
 ## Introduction
 
-We obtained the pseudobulk sample that have been processed by Christina. Each sample is the sum of read count for each gene for all cells within a sequencing batch and a perturbation (including NTC). There are 107 genes targeted for Loss of function knockdown. These genes were divided into 5 gene sets. Each genes sets were perturbed and sequenced in three to four batches. After removing lowly expressed genes, we applied TMM to estimate the normalization factors. 
+We obtained the pseudobulk sample that have been processed by Christina. Each sample is the sum of read count for each gene for all cells within a sequencing batch and a perturbation (including NTC). There are 107 genes targeted for Loss of function knockdown. These genes were divided into 5 gene sets. Each genes sets were perturbed and sequenced in three to four batches. After removing lowly expressed genes, we applied TMM to estimate the normalization factors. The batch structure was summarized as below:
+
+![](assets/batch_structure.png)
 
 Then we estimate the mean-variance trend of the pseudobulk count matrix while controlling for the batch effects as mixed effects. The estimation error was preserved as input for the downstream factor analysis.
 
@@ -306,13 +308,43 @@ We also compared Pearson correlation with the log fold change from dream. Since 
 This median correlation was ~0.55 with different approaches of DEG analysis showed that the gene-level effect has captured real signals of perturbation with 21 factors.
 
 
+## Differential gene expression analysis
+
+Given the nested batch structure, we first ran a variance component analysis for each gene with the following model:
+
+$$
+expresison \sim (1|donor) + (1|gene_set) + (1|perturbation) + (1|seq\_batch\backslash culture\_batch)
+$$
 
 
+As shown by the figure below, culture batch, sequencing batch and gene set each has a substantial PVE. 
 
 
+![](assets/gaba_var_part_minnd.png)
 
+We took all the batch structure into account for the differential analysis. Essentially, we compare the transcriptomic profile of perturbations against NTCs within each gene sets (gene categories) and donor-paird when accounting for the batch effects:
 
+$$
+Expression \sim Perturbation + Donor + GeneSet + (1|Seq\_batch \backslash Culture\_batch)
+$$
 
+Most perturbations only has ~10 genes. But some perturbations ilke PTEN and NF1 have over 1000 DEGs.
+
+## Biological sharing between perturbations
+
+### Cross batch sharing by within batch contrast
+
+Considering the high PVE of culture batch, we perform perturbation vs. NTC contrast within each culture batch. 8 culture batch without NTCs were discarded. Several perturbations were missed because they only had one contrast. If we run contrasts within the sequencing batch, no samples will be dropped. However, the covariance matrix from the sequencing batch contrast is too noisy.
+
+After obtaining the within batch contrast, each perturbation usually has 2-4 contrasts. Constrast in each gene was weighted by the residual error derived from the differential expression analysis. Then we computed the pairwise covariance across all genes for each pair of perturbation without the same-donor covariance. We also computed the covriance between different batches for the same perturbation. Let $C_{jk}$ denote the cross batch covariance between perturbations $j$ and perturbation $k$, and $T_{j}$ is the cross batch covariance of the perturbation $j$. We compute the correlation, $R_{jk}$ as:
+
+$$
+R_{jk} = \dfrac{C_{jk}}{\sqrt{T_j T_k}}
+$$
+
+However, we found that ~50 perturbations has $T_j<0$, meaning that reproducible signals across batches were weak compared to noise.  Here, we only present the correlation heatmap of 12 perturbations with reliable sign of correlation:
+
+![](assets/GABA_reliable_corr_heatmap_Z2.png)
 
 
 
