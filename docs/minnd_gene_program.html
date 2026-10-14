@@ -411,7 +411,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-11
+<strong>Last updated:</strong> 2026-10-13
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -542,15 +542,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree79b76099355691f2d239fb8128ff68be795efa6etargetblank79b7609a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree0f83588e4b5f16cb2ca40a2a1cc5d35349a07816targetblank0f83588a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/LifanLiang/data_analysis/tree/79b76099355691f2d239fb8128ff68be795efa6e" target="_blank">79b7609</a>
+<a href="https://github.com/LifanLiang/data_analysis/tree/0f83588e4b5f16cb2ca40a2a1cc5d35349a07816" target="_blank">0f83588</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree79b76099355691f2d239fb8128ff68be795efa6etargetblank79b7609a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomLifanLiangdataanalysistree0f83588e4b5f16cb2ca40a2a1cc5d35349a07816targetblank0f83588a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -560,7 +560,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/LifanLiang/data_analysis/tree/79b76099355691f2d239fb8128ff68be795efa6e" target="_blank">79b7609</a>.
+<a href="https://github.com/LifanLiang/data_analysis/tree/0f83588e4b5f16cb2ca40a2a1cc5d35349a07816" target="_blank">0f83588</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -625,6 +625,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/LifanLiang/data_analysis/blob/0f83588e4b5f16cb2ca40a2a1cc5d35349a07816/analysis/minnd_gene_program.Rmd" target="_blank">0f83588</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-10-13
+</td>
+<td>
+wflow_publish(c("analysis", "data", "docs"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/LifanLiang/data_analysis/984e2df4405d572174ec8bb40ef8de24cdc0597c/docs/minnd_gene_program.html" target="_blank">984e2df</a>
+</td>
+<td>
+Lifan Liang
+</td>
+<td>
+2026-09-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -963,7 +997,9 @@ cells within a sequencing batch and a perturbation (including NTC).
 There are 107 genes targeted for Loss of function knockdown. These genes
 were divided into 5 gene sets. Each genes sets were perturbed and
 sequenced in three to four batches. After removing lowly expressed
-genes, we applied TMM to estimate the normalization factors.</p>
+genes, we applied TMM to estimate the normalization factors. The batch
+structure was summarized as below:</p>
+<p><img src="assets/batch_structure.png" /></p>
 <p>Then we estimate the mean-variance trend of the pseudobulk count
 matrix while controlling for the batch effects as mixed effects. The
 estimation error was preserved as input for the downstream factor
@@ -1275,6 +1311,62 @@ distribution was similar to that of MAST:</p>
 <p>This median correlation was ~0.55 with different approaches of DEG
 analysis showed that the gene-level effect has captured real signals of
 perturbation with 21 factors.</p>
+</div>
+<div id="differential-gene-expression-analysis" class="section level2">
+<h2>Differential gene expression analysis</h2>
+<p>Given the nested batch structure, we first ran a variance component
+analysis for each gene with the following model:</p>
+<p><span class="math display">\[
+expresison \sim (1|donor) + (1|gene_set) + (1|perturbation) +
+(1|seq\_batch\backslash culture\_batch)
+\]</span></p>
+<p>As shown by the figure below, culture batch, sequencing batch and
+gene set each has a substantial PVE.</p>
+<p><img src="assets/gaba_var_part_minnd.png" /></p>
+<p>We took all the batch structure into account for the differential
+analysis. Essentially, we compare the transcriptomic profile of
+perturbations against NTCs within each gene sets (gene categories) and
+donor-paird when accounting for the batch effects:</p>
+<p><span class="math display">\[
+Expression \sim Perturbation + Donor + GeneSet + (1|Seq\_batch
+\backslash Culture\_batch)
+\]</span></p>
+<p>Most perturbations only has ~10 genes. But some perturbations ilke
+PTEN and NF1 have over 1000 DEGs.</p>
+</div>
+<div id="biological-sharing-between-perturbations"
+class="section level2">
+<h2>Biological sharing between perturbations</h2>
+<div id="cross-batch-sharing-by-within-batch-contrast"
+class="section level3">
+<h3>Cross batch sharing by within batch contrast</h3>
+<p>Considering the high PVE of culture batch, we perform perturbation
+vs. NTC contrast within each culture batch. 8 culture batch without NTCs
+were discarded. Several perturbations were missed because they only had
+one contrast. If we run contrasts within the sequencing batch, no
+samples will be dropped. However, the covariance matrix from the
+sequencing batch contrast is too noisy.</p>
+<p>After obtaining the within batch contrast, each perturbation usually
+has 2-4 contrasts. Constrast in each gene was weighted by the residual
+error derived from the differential expression analysis. Then we
+computed the pairwise covariance across all genes for each pair of
+perturbation without the same-donor covariance. We also computed the
+covriance between different batches for the same perturbation. Let <span
+class="math inline">\(C_{jk}\)</span> denote the cross batch covariance
+between perturbations <span class="math inline">\(j\)</span> and
+perturbation <span class="math inline">\(k\)</span>, and <span
+class="math inline">\(T_{j}\)</span> is the cross batch covariance of
+the perturbation <span class="math inline">\(j\)</span>. We compute the
+correlation, <span class="math inline">\(R_{jk}\)</span> as:</p>
+<p><span class="math display">\[
+R_{jk} = \dfrac{C_{jk}}{\sqrt{T_j T_k}}
+\]</span></p>
+<p>However, we found that ~50 perturbations has <span
+class="math inline">\(T_j&lt;0\)</span>, meaning that reproducible
+signals across batches were weak compared to noise. Here, we only
+present the correlation heatmap of 12 perturbations with reliable sign
+of correlation:</p>
+<p><img src="assets/GABA_reliable_corr_heatmap_Z2.png" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1317,6 +1409,7 @@ loaded via a namespace (and not attached):
 [37] lifecycle_1.0.5   vctrs_0.7.3       evaluate_1.0.5    glue_1.8.1       
 [41] whisker_0.4.1     rmarkdown_2.31    httr_1.4.8        tools_4.6.1      
 [45] pkgconfig_2.0.3   htmltools_0.5.9  </code></pre>
+</div>
 </div>
 </div>
 </div>
